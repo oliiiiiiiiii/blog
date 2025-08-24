@@ -2,35 +2,40 @@
 <html lang="zh-Hant">
 <head>
   <meta charset="UTF-8" />
-  <title>oliiiiiiiiii</title>
+  <title>Oli's blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="/assets/css/style.css" />
+  <link rel="stylesheet" href="./assets/css/style.css"/>
+  <script src="https://kit.fontawesome.com/10d8ed6fa8.js" crossorigin="anonymous"></script>
 </head>
-<body class="flex h-screen font-sans">
+<body class="flex h-screen font-sans text-gray-800 bg-white">
 
   <!-- 左側欄 -->
-  <aside class="w-64 bg-gray-100 p-6 border-r flex flex-col items-center">
-    <img src="/assets/images/profile.jpg" alt="Profile" class="w-24 h-24 rounded-full mb-4" />
-    <div class="flex space-x-2 mb-4 text-2xl">
-      <a href="#"><i class="fa-brands fa-instagram"></i></a>
-      <a href="#"><i class="fa-brands fa-facebook"></i></a>
-      <!-- 其他社群 icon -->
+  <aside class="w-64 bg-gray-50 p-6 border-r flex flex-col items-center space-y-6">
+    <!-- 頭像 -->
+    <img src="./assets/images/profile.jpg" alt="Profile" class="w-24 h-24 rounded-full shadow" />
+
+    <!-- 社群 icon -->
+    <div class="flex space-x-4 text-xl text-gray-600">
+      <a href="https://www.instagram.com/_y.chen_0108/" target="_blank"><i class="fa-brands fa-instagram hover:text-pink-500"></i></a>
+      <a href="https://www.facebook.com/olivia.lin.3720190" target="_blank"><i class="fa-brands fa-facebook hover:text-blue-500"></i></a>
+      <a href="mailto:olivia950108@example.com"><i class="fa-solid fa-envelope hover:text-rose-400"></i></a>
     </div>
-    <nav class="flex flex-col space-y-2 text-lg font-medium text-gray-800">
-      <a href="#home">home</a>
-      <a href="#about">about me</a>
-      <a href="#articles">articles</a>
-      <a href="#tags">tags</a>
+
+    <!-- 導覽列 -->
+    <nav class="flex flex-col space-y-3 text-base font-semibold w-full text-center">
+      <a href="#home" class="hover:text-blue-600">home</a>
+      <a href="#about" class="hover:text-blue-600">about me</a>
+      <a href="#articles" class="hover:text-blue-600">articles</a>
+      <a href="#tags" class="hover:text-blue-600">tags</a>
     </nav>
   </aside>
 
-  <!-- 右側內容 -->
+  <!-- 右側主內容 -->
   <main id="main-content" class="flex-1 overflow-y-auto p-6">
-    <!-- JS 載入 partials/*.html 放這邊 -->
+    <!-- JS 載入 partials/*.html 的內容會插入這裡 -->
   </main>
 
-  <script src="https://kit.fontawesome.com/yourkitid.js" crossorigin="anonymous"></script> <!-- 替換 yourkitid -->
   <script src="/assets/js/main.js"></script>
 </body>
 </html>
