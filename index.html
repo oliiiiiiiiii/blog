@@ -8,12 +8,15 @@
   <link rel="stylesheet" href="/assets/css/style.css"/>
   <script src="https://kit.fontawesome.com/10d8ed6fa8.js" crossorigin="anonymous"></script>
   <link rel="icon" href="/assets/images/favicon.png" type="image/png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
 </head>
 
-<body class="h-screen font-sans text-gray-800 bg-white">
+<body class="h-screen text-gray-800 bg-white">
 
   <!-- ☰ 漢堡選單按鈕（僅手機顯示） -->
-  <header class="md:hidden flex items-center justify-between p-4 aside-custom-bg">
+  <header class="md:hidden flex items-center justify-between p-4 aside-custom-bg text-white">
     <h1 class="text-xl font-bold">Olí.</h1>
     <button id="menu-toggle" class="text-2xl">
       ☰
@@ -24,26 +27,26 @@
 
     <!-- 側邊欄（手機預設隱藏） -->
     <aside id="sidebar"
-      class="aside-custom-bg md:block hidden w-full md:w-1/5 p-6 flex-col items-center space-y-6 md:flexmd:border-b-0">
+      class="aside-custom-bg md:block hidden w-full md:w-1/5 p-6 flex-col items-center space-y-6 md:flexmd:border-b-0 text-white">
 
       <!-- 頭像 -->
-      <img src="/assets/images/profile.jpg" alt="Profile" class="w-24 h-24 rounded-full shadow mx-auto" />
-      <h1 class="text-center text-xl font-semibold">Olí.</h1>
+      <img src="/assets/images/profile.jpg" alt="Profile" class="mt-4 w-28 h-28 rounded-full shadow mx-auto" />
+      <h1 class="text-center text-3xl font-semibold">Olí.</h1>
 
       <!-- 社群 icon -->
-      <div class="flex justify-center space-x-4 text-xl text-gray-600">
-        <a href="https://www.instagram.com/_y.chen_0108/" target="_blank"><i class="fa-brands fa-instagram hover:text-pink-500"></i></a>
-        <a href="https://github.com/oliiiiiiiiii" target="_blank"><i class="fa-brands fa-github hover:text-black-500"></i></a>
-        <a href="https://discord.com/users/801441766330859570" target="_blank"><i class="fa-brands fa-discord hover:text-blue-500"></i></a>
-        <a href="mailto:olivia950108@gmail.com" target="_blank"><i class="fa-solid fa-envelope hover:text-gray-500"></i></a>
+      <div class="flex justify-center space-x-4 text-xl text-gray-600 text-white">
+        <a href="https://www.instagram.com/_y.chen_0108/" target="_blank"><i class="fa-brands fa-instagram hover:text-pink-100 text-2xl"></i></a>
+        <a href="https://github.com/oliiiiiiiiii" target="_blank"><i class="fa-brands fa-github hover:text-black-500 text-2xl"></i></a>
+        <a href="https://discord.com/users/801441766330859570" target="_blank"><i class="fa-brands fa-discord hover:text-blue-100 text-2xl"></i></a>
+        <a href="mailto:olivia950108@gmail.com" target="_blank"><i class="fa-solid fa-envelope hover:text-gray-500 text-2xl"></i></a>
       </div>
 
       <!-- 導覽列 -->
       <nav class="flex flex-col space-y-3 text-base font-semibold w-full text-center">
-        <a href="#home" class="hover:text-blue-600">home</a>
-        <a href="#about" class="hover:text-blue-600">about me</a>
-        <a href="#articles" class="hover:text-blue-600">articles</a>
-        <a href="#tags" class="hover:text-blue-600">tags</a>
+        <a href="#home" class="hover:text-blue-600 text-xl">home</a>
+        <a href="#about" class="hover:text-blue-600 text-xl">about me</a>
+        <a href="#articles" class="hover:text-blue-600 text-xl">articles</a>
+        <a href="#tags" class="hover:text-blue-600 text-xl">tags</a>
       </nav>
     </aside>
 
