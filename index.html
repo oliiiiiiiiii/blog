@@ -1,47 +1,36 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>oliiiiiiiiii</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="/assets/css/style.css" />
 </head>
-<body class="p-6 max-w-3xl mx-auto">
-  <h1 class="text-3xl font-bold mb-4">文章列表</h1>
-  <ul id="posts" class="list-disc pl-5"></ul>
-  <script>
-    fetch('/post.php')
-      .then(res => res.json())
-      .then(data => {
-        const container = document.getElementById('posts');
-        data.forEach(post => {
-          const wrapper = document.createElement('div');
-          wrapper.className = 'p-4 border rounded space-y-1';
+<body class="flex h-screen font-sans">
 
-          const titleLink = document.createElement('a');
-          titleLink.className = 'text-blue-600 text-lg font-bold hover:underline';
-          titleLink.href = `/post.php?name=${encodeURIComponent(post.slug)}`;
-          titleLink.textContent = post.title;
+  <!-- 左側欄 -->
+  <aside class="w-64 bg-gray-100 p-6 border-r flex flex-col items-center">
+    <img src="/assets/images/profile.jpg" alt="Profile" class="w-24 h-24 rounded-full mb-4" />
+    <div class="flex space-x-2 mb-4 text-2xl">
+      <a href="#"><i class="fa-brands fa-instagram"></i></a>
+      <a href="#"><i class="fa-brands fa-facebook"></i></a>
+      <!-- 其他社群 icon -->
+    </div>
+    <nav class="flex flex-col space-y-2 text-lg font-medium text-gray-800">
+      <a href="#home">home</a>
+      <a href="#about">about me</a>
+      <a href="#articles">articles</a>
+      <a href="#tags">tags</a>
+    </nav>
+  </aside>
 
-          const date = document.createElement('p');
-          date.className = 'text-sm text-gray-500';
-          date.textContent = post.date;
+  <!-- 右側內容 -->
+  <main id="main-content" class="flex-1 overflow-y-auto p-6">
+    <!-- JS 載入 partials/*.html 放這邊 -->
+  </main>
 
-          const summary = document.createElement('p');
-          summary.textContent = post.summary;
-
-          wrapper.appendChild(titleLink);
-          if (post.date) wrapper.appendChild(date);
-          if (post.summary) wrapper.appendChild(summary);
-
-          container.appendChild(wrapper);
-        });
-
-      })
-      .catch(err => {
-        const container = document.getElementById('posts');
-        container.innerHTML = `<p class="text-red-500">發生錯誤：${err.message}</p>`;
-      });
-  </script>
-
+  <script src="https://kit.fontawesome.com/yourkitid.js" crossorigin="anonymous"></script> <!-- 替換 yourkitid -->
+  <script src="/assets/js/main.js"></script>
 </body>
 </html>
