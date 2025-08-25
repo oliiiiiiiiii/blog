@@ -1,14 +1,66 @@
-.aside-custom-bg {
-  background-color: rgba(147, 121, 113, 1);
+.aside-custom {
+  background-color: rgba(147, 121, 113, 0.9);
 }
 
 .main-custom-bg {
   background-color: rgba(147, 121, 113, 0.6);
 }
 
-body {
+.aside-custom {
   font-family: "Playfair Display", serif;
   font-optical-sizing: auto;
   font-weight: 400;
   font-style: normal;
 }
+
+.aside-hover a:hover {
+  color: rgb(70, 86, 103);
+  transition: color 0.3s ease;
+}
+
+    #sidebar {
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      transform-origin: top;
+    }
+    
+    #sidebar.menu-hidden {
+      max-height: 0;
+      opacity: 0;
+      transform: translateY(-20px) scaleY(0.8);
+      padding-top: 0;
+      padding-bottom: 0;
+      overflow: hidden;
+    }
+    
+    #sidebar.menu-visible {
+      max-height: 100vh;
+      opacity: 1;
+      transform: translateY(0) scaleY(1);
+    }
+    
+    #menu-toggle {
+      transition: transform 0.3s ease;
+    }
+    
+    #menu-toggle.active {
+      transform: rotate(90deg);
+    }
+    
+    .menu-item {
+      opacity: 0;
+      transform: translateX(-20px);
+      transition: all 0.3s ease;
+    }
+    
+    .menu-item.animate-in {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    
+    .menu-item:nth-child(1) { transition-delay: 0.1s; }
+    .menu-item:nth-child(2) { transition-delay: 0.2s; }
+    .menu-item:nth-child(3) { transition-delay: 0.3s; }
+    .menu-item:nth-child(4) { transition-delay: 0.4s; }
+    .menu-item:nth-child(5) { transition-delay: 0.5s; }
+    .menu-item:nth-child(6) { transition-delay: 0.6s; }
+    .menu-item:nth-child(7) { transition-delay: 0.7s; }
