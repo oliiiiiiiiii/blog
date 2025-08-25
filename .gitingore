@@ -1,0 +1,23 @@
+# 編譯產物 / 暫存檔案（如有）
+*.log
+*.tmp
+.DS_Store
+
+# 作業系統與編輯器產生的檔案
+.idea/
+.vscode/
+node_modules/
+.env
+
+# 上傳的圖片（如果是部落格文章內才會用到的話，可以放 CDN 或其他圖床）
+assets/images/uploads/
+uploads/
+
+# 使用者產生的檔案（如果未來有留言或上傳功能）
+user_uploads/
+
+# PHP session 或快取檔案（如果有 PHP server 功能）
+sessions/
+cache/
+/php-lib/
+
