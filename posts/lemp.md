@@ -5,7 +5,6 @@ category: CS
 tags: [LEMP, WordPress, Domain Name, SSL]
 summary: 這篇文章詳細介紹如何使用 LEMP 架構在 Ubuntu 上部署 WordPress，從伺服器設定、資料庫配置、SSL 憑證申請，到網域名稱綁定與後台優化，建立一個完整可運作的部落格網站。
 ---
-# 用 LEMP + WordPress 建立自己的部落格
 ### 前言
 由於台大資訊系的學生很多人都有漂亮的部落格，所以我也想要一個，再加上我上學期修的[網路管理與系統管理](https://www.csie.ntu.edu.tw/~hsinmu/site/courses/25springnasa)課程其中一個 lab 是要用 LEMP + WordPress 建立一個網頁，雖然我做完後覺得 WordPress 的主題都太醜就沒有用了，最後產出的網頁也沒有用到 LEMP 中的 Maria-DB，但我還是把過程記錄下來了。
 ### Linux

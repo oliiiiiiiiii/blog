@@ -5,7 +5,6 @@ category: CS
 tags: [Neovim]
 summary: 這篇文章記錄在 macOS 上從安裝 Neovim、簡易設定到進階客製化，包括 LSP、主題、外掛管理與 Neovide 使用，打造類 IDE 的高效編輯環境。
 ---
-# 在 MacOS 上安裝與設定 Neovim
 ### 前言
 大一下的時候修了一堂[網路管理與系統管理](https://www.csie.ntu.edu.tw/~hsinmu/site/courses/25springnasa)，因為常常要修改、建立各種檔案，而且都是在只有 CLI 的虛擬機上，所以每天都在用 Vim，久而久之有點愛上純文字編輯了。
 不過用 Vim 寫程式還是有些不方便，畢竟少了 IDE 常見的功能。
@@ -67,20 +66,16 @@ nvim ~/.config/nvim/init.lua
 貼上我改了好久的設定檔，有點懶得解釋每個部分在幹嘛，想了解就上網查吧，反正就是設定 lsp ( 這份只有 python 跟 lua 的 lsp，要加其他語言的話註解有寫要加的兩個地方，其他語言的 lsp 在 nvim 裡面打 `:Mason` 就可以看了 ) ：
 ```lua
 vim.opt.rtp:prepend(vim.fn.stdpath("data") .. "/lazy/lazy.nvim")
-
 require("lazy").setup({
   { "williamboman/mason.nvim" },
   { "williamboman/mason-lspconfig.nvim" },
   { "neovim/nvim-lspconfig" },
-
   { "hrsh7th/nvim-cmp" },
   { "hrsh7th/cmp-nvim-lsp" },
   { "hrsh7th/cmp-buffer" },
   { "hrsh7th/cmp-path" },
-
   { "L3MON4D3/LuaSnip" },
 })
-
 local cmp = require("cmp")
 cmp.setup({
   snippet = {
@@ -101,26 +96,21 @@ cmp.setup({
     { name = 'path' },
   })
 })
-
 local capabilities = require("cmp_nvim_lsp").default_capabilities()
 local on_attach = function(_, bufnr)
   vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
 end
-
 require("mason").setup()
 require("mason-lspconfig").setup({
   ensure_installed = { "pyright", "lua_ls" }, -- 要加其他語言的話在這裡加
 })
-
 local lspconfig = require("lspconfig")
 local servers = { "pyright", "lua_ls" } -- 要加其他語言的話這裡也要加
-
 for _, server in ipairs(servers) do
   local opts = {
     capabilities = capabilities,
     on_attach = on_attach,
   }
-
   if server == "lua_ls" then
     opts.settings = {
       Lua = {
@@ -134,13 +124,11 @@ for _, server in ipairs(servers) do
       }
     }
   end
-
   if server == "pyright" then
     opts.root_dir = function()
       return vim.fn.getcwd()
     end
   end
-
   lspconfig[server].setup(opts)
 end
 ```
