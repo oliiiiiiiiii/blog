@@ -13,6 +13,13 @@
   font-style: normal;
 }
 
+#main-content {
+  font-family: "Playfair Display", serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+}
+
 .aside-hover a:hover {
   color: rgb(70, 86, 103);
   transition: color 0.3s ease;
