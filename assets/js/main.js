@@ -255,4 +255,7 @@ async function loadTagsPage() {
   }
 }
 
+// Make functions available globally
+window.updateActiveNavigation = updateActiveNavigation;
+
 // Note: Rendering of articles and tags is handled in assets/js/articles.js

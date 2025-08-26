@@ -1,7 +1,13 @@
 // assets/js/articles.js
 
-// Global variable to store posts
+// Global variables to store posts and navigation context
 let allPosts = [];
+let navigationContext = {
+  source: null, // 'articles', 'tags', 'tag-filter'
+  category: null, // for articles page category filter
+  tag: null, // for tag-specific navigation
+  posts: null // filtered posts to return to
+};
 
 // Note: Using PHP backend for better performance and server-side processing
 
@@ -15,6 +21,14 @@ async function initializeArticlesPage() {
     }
     
     allPosts = await res.json();
+
+    // Set navigation context
+    navigationContext = {
+      source: 'articles',
+      category: 'All',
+      tag: null,
+      posts: allPosts
+    };
 
     // Extract unique categories
     const categories = new Set();
@@ -78,6 +92,10 @@ function renderCategoryButtons(categories) {
       const filteredPosts = category === "All" 
         ? allPosts 
         : allPosts.filter((post) => post.category === category);
+      
+      // Update navigation context
+      navigationContext.category = category;
+      navigationContext.posts = filteredPosts;
       
       renderArticles(filteredPosts);
     });
@@ -199,15 +217,27 @@ function renderArticleInline(postData) {
       ).join(" ")
     : '';
   
+  // Determine back button text and action based on navigation context
+  let backButtonText = 'Back to Articles';
+  let backButtonAction = 'returnToPreviousPage()';
+  
+  if (navigationContext.source === 'tags') {
+    backButtonText = 'Back to All Tags';
+  } else if (navigationContext.source === 'tag-filter' && navigationContext.tag) {
+    backButtonText = `Back to ${navigationContext.tag}`;
+  } else if (navigationContext.source === 'articles' && navigationContext.category) {
+    backButtonText = `Back to Articles`;
+  }
+  
   mainContent.innerHTML = `
     <div class="max-w-4xl mx-auto">
       <!-- Navigation -->
       <div class="mb-6">
-        <button onclick="loadArticlesPage()" class="text-blue-600 hover:text-blue-800 transition-colors text-sm font-medium mb-4 flex items-center">
+        <button onclick="${backButtonAction}" class="text-blue-600 hover:text-blue-800 transition-colors text-sm font-medium mb-4 flex items-center">
           <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
           </svg>
-          Back to Articles
+          ${backButtonText}
         </button>
       </div>
 
@@ -310,6 +340,14 @@ async function initializeTagsPage() {
     
     const posts = await res.json();
     
+    // Set navigation context
+    navigationContext = {
+      source: 'tags',
+      category: null,
+      tag: null,
+      posts: posts
+    };
+    
     // Count tags
     const tagCounts = {};
     posts.forEach(post => {
@@ -365,6 +403,14 @@ function showArticlesByTag(tag, posts) {
     post.tags && Array.isArray(post.tags) && post.tags.some(t => t.trim() === tag)
   );
   
+  // Update navigation context
+  navigationContext = {
+    source: 'tag-filter',
+    category: null,
+    tag: tag,
+    posts: filteredPosts
+  };
+  
   // Update the main content to show filtered articles
   const mainContent = document.getElementById('main-content');
   if (mainContent) {
@@ -388,6 +434,66 @@ function showArticlesByTag(tag, posts) {
   }
 }
 
+// Function to return to previous page based on context
+function returnToPreviousPage() {
+  const mainContent = document.getElementById('main-content');
+  
+  if (navigationContext.source === 'articles') {
+    // Return to articles page with the same category filter
+    loadArticlesPageWithCategory(navigationContext.category);
+  } else if (navigationContext.source === 'tag-filter') {
+    // Return to tag-filtered articles
+    showArticlesByTag(navigationContext.tag, allPosts);
+  } else if (navigationContext.source === 'tags') {
+    // Return to tags page
+    loadTagsPage();
+  } else {
+    // Fallback to articles page
+    loadArticlesPage();
+  }
+}
+
+// Load articles page with specific category selected
+async function loadArticlesPageWithCategory(category = 'All') {
+  try {
+    // Load the articles HTML template
+    const response = await fetch('partials/articles.html');
+    const html = await response.text();
+    
+    const mainContent = document.getElementById('main-content');
+    mainContent.innerHTML = html;
+    
+    // Initialize articles functionality
+    if (window.initializeArticlesPage) {
+      await window.initializeArticlesPage();
+      
+      // Set the correct category as active and filter posts
+      setTimeout(() => {
+        const categoryButton = document.querySelector(`[data-category="${category}"]`);
+        if (categoryButton) {
+          categoryButton.click();
+        }
+      }, 100);
+    }
+    
+    // Update URL and navigation
+    window.history.pushState({page: 'articles'}, '', '#articles');
+    if (window.updateActiveNavigation) {
+      window.updateActiveNavigation('articles');
+    }
+    
+  } catch (error) {
+    console.error('Error loading articles:', error);
+    const mainContent = document.getElementById('main-content');
+    mainContent.innerHTML = `
+      <div class="text-center p-8">
+        <h2 class="text-2xl font-bold text-red-600 mb-4">Error Loading Articles</h2>
+        <p class="text-gray-600">Could not load articles. Please try again later.</p>
+      </div>
+    `;
+  }
+}
+
 // Utility function to escape HTML
 function escapeHtml(text) {
   if (typeof text !== 'string') return '';
@@ -401,3 +507,5 @@ window.initializeArticlesPage = initializeArticlesPage;
 window.initializeTagsPage = initializeTagsPage;
 window.loadPostsByTag = showArticlesByTag;
 window.loadArticleInline = loadArticleInline;
+window.returnToPreviousPage = returnToPreviousPage;
+window.loadArticlesPageWithCategory = loadArticlesPageWithCategory;
