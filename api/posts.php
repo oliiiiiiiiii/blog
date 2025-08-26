@@ -1,47 +1,39 @@
 <?php
-require_once('../php-lib/ParsedownExtra.php');
-require_once('../php-lib/Parsedown.php');
+require_once __DIR__ . '/../php-lib/ParsedownExtra.php';
 
-function parseFrontMatter(string $markdown): array {
-    if (preg_match('/^---\s*(.*?)\s*---\s*/s', $markdown, $matches)) {
+function parseFrontMatter($markdown) {
+    if (preg_match('/^---\s*(.*?)\s*---\s*(.*)$/s', $markdown, $matches)) {
         $yaml = $matches[1];
-        $lines = explode("\n", $yaml);
-        $meta = [];
+        $content = $matches[2];
 
-        foreach ($lines as $line) {
-            if (preg_match('/^(\w+):\s*(.*)$/', trim($line), $m)) {
-                $key = strtolower($m[1]);
+        $meta = [];
+        foreach (explode("\n", $yaml) as $line) {
+            if (preg_match('/^(\w+):\s*(.*)$/', $line, $m)) {
+                $key = trim($m[1]);
                 $value = trim($m[2]);
-                if ($key === 'tags') {
-                    $value = trim($value, '[]');
-                    $tags = array_filter(array_map('trim', explode(',', $value)));
-                    $meta['tags'] = $tags;
-                } else {
-                    $meta[$key] = $value;
+                if (str_starts_with($value, '[')) {
+                    // tags: [a, b]
+                    $value = array_map('trim', explode(',', trim($value, '[]')));
                 }
+                $meta[$key] = $value;
             }
         }
-
+        $meta['content'] = $content;
         return $meta;
     }
-    return [];
+    return ['content' => $markdown];
 }
 
-function loadAllPosts($dir = '../posts') {
-    $posts = [];
-
-    foreach (glob("$dir/*.md") as $file) {
-        $content = file_get_contents($file);
-        $meta = parseFrontMatter($content);
-
-        if (!empty($meta)) {
-            $meta['slug'] = basename($file, '.md');
-            $posts[] = $meta;
-        }
+$posts = [];
+$dir = __DIR__ . '/../posts';
+foreach (scandir($dir) as $file) {
+    if (str_ends_with($file, '.md')) {
+        $markdown = file_get_contents("$dir/$file");
+        $data = parseFrontMatter($markdown);
+        $data['slug'] = pathinfo($file, PATHINFO_FILENAME);
+        $posts[] = $data;
     }
-
-    return $posts;
 }
 
 header('Content-Type: application/json');
-echo json_encode(loadAllPosts());
+echo json_encode($posts);
