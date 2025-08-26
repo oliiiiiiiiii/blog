@@ -1,9 +1,9 @@
 ---
 title: 在 MacOS 上安裝與設定 Neovim
-date: 2025-08-27
+date: 2025-07-22
 category: CS
-tags: [lemp, wordpress, Tutorial]
-summary: 這是一篇跟lemp有關的文章
+tags: [Neovim]
+summary: 這篇文章記錄在 macOS 上從安裝 Neovim、簡易設定到進階客製化，包括 LSP、主題、外掛管理與 Neovide 使用，打造類 IDE 的高效編輯環境。
 ---
 # 在 MacOS 上安裝與設定 Neovim
 ### 前言
@@ -143,7 +143,6 @@ for _, server in ipairs(servers) do
 
   lspconfig[server].setup(opts)
 end
-
 ```
 之後再啟動一次：
 ```bash

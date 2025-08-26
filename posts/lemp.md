@@ -1,12 +1,13 @@
 ---
 title: 用 LEMP + WordPress 建立自己的部落格
-date: 2025-08-01
+date: 2025-08-05
 category: CS
-tags: [neovim, Tutorial, test]
-summary: 12345
+tags: [LEMP, WordPress, Domain Name, SSL]
+summary: 這篇文章詳細介紹如何使用 LEMP 架構在 Ubuntu 上部署 WordPress，從伺服器設定、資料庫配置、SSL 憑證申請，到網域名稱綁定與後台優化，建立一個完整可運作的部落格網站。
 ---
 # 用 LEMP + WordPress 建立自己的部落格
 ### 前言
+由於台大資訊系的學生很多人都有漂亮的部落格，所以我也想要一個，再加上我上學期修的[網路管理與系統管理](https://www.csie.ntu.edu.tw/~hsinmu/site/courses/25springnasa)課程其中一個 lab 是要用 LEMP + WordPress 建立一個網頁，雖然我做完後覺得 WordPress 的主題都太醜就沒有用了，最後產出的網頁也沒有用到 LEMP 中的 Maria-DB，但我還是把過程記錄下來了。
 ### Linux
 我使用 [AWS](https://aws.amazon.com/tw/) 的 VPS，使用的是 Ubuntu Server 24.04 LTS。
 連線進入這台 Ubuntu 後，先確定對外有網路連線，可以使用：
@@ -163,7 +164,6 @@ server {
     }
     . . .
 }
-
 ```
 ### WordPress 安裝
 去 `http://<你server的公有ip>` 把資訊打一打就可以安裝了！
@@ -212,73 +212,4 @@ sudo systemctl restart php8.3-fpm
 ```
 ```bash
 sudo systemctl restart nginx
-```
-### 自寫前端搭配 WordPress 當 CMS
-首先，去 `https://<你的domain name>/wp-json/wp/v2/posts` 看有沒有出現 JSON 格式的資料，確認 WordPress 的 API 正常運作。
-接著建立資料夾：
-```bash
-sudo mkdir -p /var/www/frontend
-sudo chown -R www-data:www-data /var/www/frontend
-```
-接著把 `/etc/nginx/sites-available/wordpress.conf` 改成下面的內容，我還把檔名改了。
-```conf
-sserver {
-    listen 80;
-    server_name oliiiiiiiiiii.page;
-    return 301 https://$host$request_uri;
-}
-
-server {
-    listen 443 ssl;
-    server_name oliiiiiiiiiii.page;
-
-    ssl_certificate /etc/letsencrypt/live/oliiiiiiiiii.page/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/oliiiiiiiiii.page/privkey.pem;
-    include /etc/letsencrypt/options-ssl-nginx.conf;
-    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
-
-    root /var/www/frontend;
-    index index.html index.htm;
-
-    location / {
-        try_files $uri $uri/ /index.html;
-    }
-
-    location /api/ {
-        proxy_pass http://localhost/wp-json/;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-    }
-
-    location ~ ^/(wp-admin|wp-login\.php) {
-        root /var/www/wordpress;
-        index index.php;
-
-        include snippets/fastcgi-php.conf;
-        fastcgi_pass unix:/run/php/php8.3-fpm.sock;
-    }
-
-    location ~* ^/(wp-includes|wp-content|wp-admin) {
-        root /var/www/wordpress;
-        try_files $uri $uri/ =404;
-    }
-
-    location ~ \.php$ {
-        root /var/www/wordpress;
-        include snippets/fastcgi-php.conf;
-        fastcgi_pass unix:/run/php/php8.3-fpm.sock;
-    }
-}
-```
-因為我改了檔名，所以要更新 Symbolic Link：
-```bash
-sudo rm /etc/nginx/sites-enabled/wordpress.conf
-sudo ln -s /etc/nginx/sites-available/blog.conf /etc/nginx/sites-enabled/
-```
-改好之後要測試 + 套用設定：
-```bash
-sudo nginx -t
-sudo systemctl reload nginx
 ```
