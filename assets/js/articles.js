@@ -1,25 +1,27 @@
 // assets/js/articles.js
 
-document.addEventListener("DOMContentLoaded", async () => {
-  // Only run if we're on the articles page
-  if (!document.getElementById('category-buttons') || !document.getElementById('articles-container')) {
-    return;
-  }
+// Global variable to store posts
+let allPosts = [];
 
+// Initialize articles page functionality
+async function initializeArticlesPage() {
   try {
     const res = await fetch("/api/posts.php");
-    const posts = await res.json();
+    allPosts = await res.json();
 
+    // Extract unique categories
     const categories = new Set();
-    posts.forEach((post) => {
-      if (post.category) categories.add(post.category);
+    allPosts.forEach((post) => {
+      if (post.category) {
+        categories.add(post.category);
+      }
     });
 
-    // Add "All" option and sort categories
-    const allCategories = ["All", ...Array.from(categories).sort()];
+    // Create category list: All + sorted categories
+    const categoryList = ["All", ...Array.from(categories).sort()];
 
-    renderCategoryButtons(allCategories, posts);
-    renderPosts(posts); // Default show all posts
+    renderCategoryButtons(categoryList);
+    renderArticles(allPosts); // Show all articles by default
 
   } catch (error) {
     console.error('Error loading articles:', error);
@@ -28,75 +30,106 @@ document.addEventListener("DOMContentLoaded", async () => {
       container.innerHTML = '<p class="text-red-500 text-center">Error loading articles. Please try again later.</p>';
     }
   }
-});
+}
 
-function renderCategoryButtons(categories, posts) {
+// Render category filter buttons
+function renderCategoryButtons(categories) {
   const container = document.getElementById("category-buttons");
   if (!container) return;
   
   container.innerHTML = "";
   
-  categories.forEach((cat) => {
+  categories.forEach((category) => {
     const btn = document.createElement("button");
-    btn.textContent = cat;
-    btn.dataset.category = cat;
-    btn.className = "category-button px-4 py-2 rounded-full border text-sm hover:bg-blue-100 mr-2 mb-2";
+    btn.textContent = category;
+    btn.dataset.category = category;
+    btn.className = "category-button px-6 py-2 rounded-full text-sm font-medium mr-4 mb-2 transition-all duration-200";
     
-    if (cat === "All") {
-      btn.classList.add("bg-blue-500", "text-white");
+    // Style for active/inactive states
+    if (category === "All") {
+      btn.classList.add("bg-blue-600", "text-white", "shadow-md");
+    } else {
+      btn.classList.add("bg-gray-100", "text-gray-700", "hover:bg-gray-200");
     }
     
+    // Add click event
     btn.addEventListener("click", () => {
-      // Remove active state from all buttons
-      const buttons = document.querySelectorAll(".category-button");
-      buttons.forEach((b) => b.classList.remove("bg-blue-500", "text-white"));
+      // Update button states
+      document.querySelectorAll(".category-button").forEach((b) => {
+        b.classList.remove("bg-blue-600", "text-white", "shadow-md");
+        b.classList.add("bg-gray-100", "text-gray-700");
+      });
       
-      // Add active state to clicked button
-      btn.classList.add("bg-blue-500", "text-white");
+      btn.classList.remove("bg-gray-100", "text-gray-700");
+      btn.classList.add("bg-blue-600", "text-white", "shadow-md");
 
       // Filter and render posts
-      const filtered = cat === "All" ? posts : posts.filter((p) => p.category === cat);
-      renderPosts(filtered);
+      const filteredPosts = category === "All" 
+        ? allPosts 
+        : allPosts.filter((post) => post.category === category);
+      
+      renderArticles(filteredPosts);
     });
     
     container.appendChild(btn);
   });
 }
 
-function renderPosts(posts) {
+// Render articles in card format
+function renderArticles(posts) {
   const container = document.getElementById("articles-container");
   if (!container) return;
   
   container.innerHTML = "";
 
   if (posts.length === 0) {
-    container.innerHTML = '<p class="text-gray-500 text-center">No articles in this category.</p>';
+    container.innerHTML = `
+      <div class="text-center py-12">
+        <p class="text-gray-500 text-lg">No articles found in this category.</p>
+      </div>
+    `;
     return;
   }
 
   posts.forEach((post) => {
     const article = document.createElement("article");
-    article.className = "bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow";
+    article.className = "bg-white rounded-xl shadow-sm p-8 hover:shadow-lg transition-all duration-300 border border-gray-100";
 
-    const tagsHtml = post.tags && Array.isArray(post.tags) 
+    // Create tags HTML
+    const tagsHtml = post.tags && Array.isArray(post.tags) && post.tags.length > 0
       ? post.tags.map(tag => 
-          `<span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm">${escapeHtml(tag)}</span>`
-        ).join("")
+          `<span class="inline-block bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">${escapeHtml(tag.trim())}</span>`
+        ).join(" ")
       : '';
 
     article.innerHTML = `
-      <div class="flex flex-col gap-6">
-        <div class="flex-1">
-          <h2 class="text-2xl font-semibold mb-3 text-gray-800 hover:text-blue-600 transition-colors">
-            <a href="/post.php?slug=${encodeURIComponent(post.slug)}" class="no-underline">${escapeHtml(post.title || 'Untitled')}</a>
-          </h2>
-          <p class="text-gray-600 mb-4 leading-relaxed">${escapeHtml(post.summary || '')}</p>
-          <div class="flex flex-wrap gap-2 mb-4">
+      <div class="space-y-4">
+        <h2 class="text-2xl font-bold text-gray-900 leading-tight">
+          <a href="/post.php?slug=${encodeURIComponent(post.slug)}" 
+             class="hover:text-blue-600 transition-colors duration-200 no-underline">
+            ${escapeHtml(post.title || 'Untitled')}
+          </a>
+        </h2>
+        
+        ${post.summary ? `
+          <p class="text-gray-600 text-lg leading-relaxed">
+            ${escapeHtml(post.summary)}
+          </p>
+        ` : ''}
+        
+        ${tagsHtml ? `
+          <div class="flex flex-wrap gap-2">
             ${tagsHtml}
           </div>
+        ` : ''}
+        
+        <div class="flex items-center justify-between pt-4 border-t border-gray-100">
           <div class="text-sm text-gray-500">
-            <span>${escapeHtml(post.date || '')}</span>
+            ${post.date ? escapeHtml(post.date) : ''}
+            ${post.date && post.category ? ' • ' : ''}
+            ${post.category ? escapeHtml(post.category) : ''}
           </div>
+          <span class="text-sm text-gray-400">5 min read</span>
         </div>
       </div>
     `;
@@ -105,71 +138,99 @@ function renderPosts(posts) {
   });
 }
 
+// Initialize tags page functionality
+async function initializeTagsPage() {
+  try {
+    const res = await fetch("/api/posts.php");
+    const posts = await res.json();
+    
+    // Count tags
+    const tagCounts = {};
+    posts.forEach(post => {
+      if (post.tags && Array.isArray(post.tags)) {
+        post.tags.forEach(tag => {
+          const trimmedTag = tag.trim();
+          if (trimmedTag) {
+            tagCounts[trimmedTag] = (tagCounts[trimmedTag] || 0) + 1;
+          }
+        });
+      }
+    });
+
+    renderTagCloud(tagCounts, posts);
+
+  } catch (error) {
+    console.error('Error loading tags:', error);
+    const container = document.getElementById('tag-list');
+    if (container) {
+      container.innerHTML = '<p class="text-red-500 text-center">Error loading tags. Please try again later.</p>';
+    }
+  }
+}
+
+// Render tag cloud
+function renderTagCloud(tagCounts, posts) {
+  const container = document.getElementById('tag-list');
+  if (!container) return;
+  
+  container.innerHTML = '';
+
+  // Sort tags alphabetically
+  const sortedTags = Object.entries(tagCounts).sort(([a], [b]) => a.localeCompare(b));
+  
+  sortedTags.forEach(([tag, count]) => {
+    const tagElement = document.createElement('button');
+    tagElement.className = 'inline-block bg-gray-100 hover:bg-blue-100 text-gray-800 hover:text-blue-800 px-4 py-3 rounded-lg font-medium transition-all duration-200 transform hover:scale-105 shadow-sm hover:shadow-md';
+    tagElement.textContent = `${tag} · ${count}`;
+    tagElement.dataset.tag = tag;
+
+    // Add click event to show articles with this tag
+    tagElement.addEventListener('click', () => {
+      showArticlesByTag(tag, posts);
+    });
+
+    container.appendChild(tagElement);
+  });
+}
+
+// Show articles filtered by tag
+function showArticlesByTag(tag, posts) {
+  const filteredPosts = posts.filter(post => 
+    post.tags && Array.isArray(post.tags) && post.tags.some(t => t.trim() === tag)
+  );
+  
+  // Update the main content to show filtered articles
+  const mainContent = document.getElementById('main-content');
+  if (mainContent) {
+    mainContent.innerHTML = `
+      <div class="max-w-4xl mx-auto">
+        <section class="py-16">
+          <div class="mb-8">
+            <button onclick="loadTagsPage()" class="text-blue-600 hover:text-blue-800 transition-colors text-sm font-medium mb-4">
+              ← Back to All Tags
+            </button>
+            <h1 class="text-4xl font-bold text-gray-800">${escapeHtml(tag)}</h1>
+            <p class="text-gray-600 mt-2">${filteredPosts.length} article${filteredPosts.length !== 1 ? 's' : ''} found</p>
+          </div>
+          <div id="articles-container" class="space-y-6"></div>
+        </section>
+      </div>
+    `;
+    
+    // Render the filtered articles
+    renderArticles(filteredPosts);
+  }
+}
+
 // Utility function to escape HTML
 function escapeHtml(text) {
+  if (typeof text !== 'string') return '';
   const div = document.createElement('div');
   div.textContent = text;
   return div.innerHTML;
 }
 
-// Function to load posts by tag (for tag page integration)
-async function loadPostsByTag(tag) {
-  try {
-    const res = await fetch('/api/posts.php');
-    const posts = await res.json();
-    const filtered = posts.filter(post => post.tags && post.tags.includes(tag));
-    
-    const container = document.getElementById('main-content');
-    if (container) {
-      renderArticlesPage(filtered, `Tag: ${tag}`);
-    }
-  } catch (error) {
-    console.error('Error loading posts by tag:', error);
-  }
-}
-
-// Function to render articles page with custom title
-function renderArticlesPage(posts, title = 'Articles') {
-  const container = document.getElementById('main-content');
-  if (!container) return;
-
-  container.innerHTML = `
-    <div class="max-w-4xl mx-auto">
-      <section class="py-16">
-        <h1 class="text-4xl font-bold mb-8 text-gray-800">${escapeHtml(title)}</h1>
-        <div class="space-y-8" id="articles-list">
-          ${posts.map(post => `
-            <article class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
-              <div class="flex flex-col md:flex-row gap-6">
-                <div class="flex-1">
-                  <h2 class="text-2xl font-semibold mb-3 text-gray-800 hover:text-blue-600 transition-colors">
-                    <a href="/post.php?slug=${encodeURIComponent(post.slug)}" class="no-underline">${escapeHtml(post.title || 'Untitled')}</a>
-                  </h2>
-                  <p class="text-gray-600 mb-4 leading-relaxed">${escapeHtml(post.summary || '')}</p>
-                  <div class="flex flex-wrap gap-2 mb-4">
-                    ${post.tags && Array.isArray(post.tags) ? post.tags.map(tag => `
-                      <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm">${escapeHtml(tag)}</span>
-                    `).join('') : ''}
-                  </div>
-                  <div class="text-sm text-gray-500">
-                    <span>${escapeHtml(post.date || '')}</span>
-                  </div>
-                </div>
-              </div>
-            </article>
-          `).join('')}
-        </div>
-        
-        ${posts.length === 0 ? '<p class="text-gray-500 text-center">No articles found.</p>' : ''}
-        
-        <div class="mt-8 text-center">
-          <a href="#home" class="text-blue-600 hover:text-blue-800 transition-colors">← Back to Home</a>
-        </div>
-      </section>
-    </div>
-  `;
-}
-
-// Make functions available globally for integration with main.js
-window.loadPostsByTag = loadPostsByTag;
-window.renderArticlesPage = renderArticlesPage;
+// Make functions available globally for main.js integration
+window.initializeArticlesPage = initializeArticlesPage;
+window.initializeTagsPage = initializeTagsPage;
+window.loadPostsByTag = showArticlesByTag;

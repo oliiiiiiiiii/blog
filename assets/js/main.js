@@ -187,29 +187,17 @@ async function fetchPosts() {
 // Load articles page
 async function loadArticlesPage() {
   try {
-    const posts = await fetchPosts();
+    // Load the articles HTML template
+    const response = await fetch('partials/articles.html');
+    const html = await response.text();
     
-    const categories = new Set();
-    posts.forEach((post) => {
-      if (post.category) categories.add(post.category);
-    });
-
-    const allCategories = ["All", ...Array.from(categories).sort()];
-    
-    // Create the articles page structure
     const mainContent = document.getElementById('main-content');
-    mainContent.innerHTML = `
-      <div class="max-w-4xl mx-auto">
-        <section class="py-16">
-          <h1 class="text-4xl font-bold mb-8 text-gray-800">Articles</h1>
-          <div id="category-buttons" class="mb-6"></div>
-          <div id="articles-container" class="space-y-8"></div>
-        </section>
-      </div>
-    `;
+    mainContent.innerHTML = html;
     
-    renderCategoryButtons(allCategories);
-    renderPosts(posts); // Default show all
+    // Initialize articles functionality
+    if (window.initializeArticlesPage) {
+      await window.initializeArticlesPage();
+    }
     
     // Update URL and navigation
     window.history.pushState({page: 'articles'}, '', '#articles');
@@ -217,49 +205,30 @@ async function loadArticlesPage() {
     
   } catch (error) {
     console.error('Error loading articles:', error);
+    const mainContent = document.getElementById('main-content');
+    mainContent.innerHTML = `
+      <div class="text-center p-8">
+        <h2 class="text-2xl font-bold text-red-600 mb-4">Error Loading Articles</h2>
+        <p class="text-gray-600">Could not load articles. Please try again later.</p>
+      </div>
+    `;
   }
 }
 
 // Load tags page
 async function loadTagsPage() {
   try {
-    const posts = await fetchPosts();
-    const tagCounts = {};
-
-    posts.forEach(post => {
-      if (post.tags && Array.isArray(post.tags)) {
-        post.tags.forEach(tag => {
-          tagCounts[tag] = (tagCounts[tag] || 0) + 1;
-        });
-      }
-    });
-
-    const mainContent = document.getElementById('main-content');
-    mainContent.innerHTML = `
-      <div class="max-w-4xl mx-auto">
-        <section class="py-16">
-          <h1 class="text-4xl font-bold mb-8 text-gray-800">All Tags</h1>
-          <div id="tag-list" class="flex flex-wrap gap-4"></div>
-        </section>
-      </div>
-    `;
-
-    const tagListDiv = document.getElementById('tag-list');
+    // Load the tags HTML template
+    const response = await fetch('partials/tags.html');
+    const html = await response.text();
     
-    Object.entries(tagCounts)
-      .sort(([a], [b]) => a.localeCompare(b))
-      .forEach(([tag, count]) => {
-        const tagCard = document.createElement('div');
-        tagCard.className = 'cursor-pointer px-4 py-2 bg-gray-100 hover:bg-blue-100 rounded shadow text-gray-700 font-medium transition';
-        tagCard.textContent = `${tag} (${count})`;
-        tagCard.dataset.tag = tag;
-
-        tagCard.addEventListener('click', () => {
-          loadPostsByTag(tag, posts);
-        });
-
-        tagListDiv.appendChild(tagCard);
-      });
+    const mainContent = document.getElementById('main-content');
+    mainContent.innerHTML = html;
+    
+    // Initialize tags functionality
+    if (window.initializeTagsPage) {
+      await window.initializeTagsPage();
+    }
       
     // Update URL and navigation
     window.history.pushState({page: 'tags'}, '', '#tags');
@@ -267,6 +236,13 @@ async function loadTagsPage() {
     
   } catch (error) {
     console.error('Error loading tags:', error);
+    const mainContent = document.getElementById('main-content');
+    mainContent.innerHTML = `
+      <div class="text-center p-8">
+        <h2 class="text-2xl font-bold text-red-600 mb-4">Error Loading Tags</h2>
+        <p class="text-gray-600">Could not load tags. Please try again later.</p>
+      </div>
+    `;
   }
 }
 
