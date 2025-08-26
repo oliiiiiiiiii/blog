@@ -104,7 +104,7 @@ function renderArticles(posts) {
 
   posts.forEach((post) => {
     const article = document.createElement("article");
-    article.className = "bg-white rounded-xl shadow-sm p-8 hover:shadow-lg transition-all duration-300 border border-gray-100";
+    article.className = "bg-white rounded-xl shadow-sm p-8 hover:shadow-lg transition-all duration-300 border border-gray-100 cursor-pointer";
 
     // Create tags HTML
     const tagsHtml = post.tags && Array.isArray(post.tags) && post.tags.length > 0
@@ -115,11 +115,8 @@ function renderArticles(posts) {
 
     article.innerHTML = `
       <div class="space-y-4">
-        <h2 class="text-2xl font-bold text-gray-900 leading-tight">
-          <a href="post.php?slug=${encodeURIComponent(post.slug)}" 
-             class="hover:text-blue-600 transition-colors duration-200 no-underline">
-            ${escapeHtml(post.title || 'Untitled')}
-          </a>
+        <h2 class="text-2xl font-bold text-gray-900 leading-tight hover:text-blue-600 transition-colors duration-200">
+          ${escapeHtml(post.title || 'Untitled')}
         </h2>
         
         ${post.summary ? `
@@ -145,8 +142,161 @@ function renderArticles(posts) {
       </div>
     `;
 
+    // Add click event to load article inline
+    article.addEventListener('click', () => {
+      loadArticleInline(post.slug);
+    });
+
     container.appendChild(article);
   });
+}
+
+// Load article content inline
+async function loadArticleInline(slug) {
+  try {
+    // Show loading state
+    const mainContent = document.getElementById('main-content');
+    mainContent.innerHTML = '<div class="flex justify-center items-center h-64"><div class="text-lg">Loading article...</div></div>';
+    
+    // Fetch article content from backend
+    const response = await fetch(`./api/get-post.php?slug=${encodeURIComponent(slug)}`);
+    
+    if (!response.ok) {
+      throw new Error(`Failed to load article: ${response.status}`);
+    }
+    
+    const postData = await response.json();
+    
+    // Render article inline
+    renderArticleInline(postData);
+    
+    // Update URL without page reload
+    window.history.pushState({page: 'article', slug: slug}, '', `#article/${slug}`);
+    
+  } catch (error) {
+    console.error('Error loading article:', error);
+    const mainContent = document.getElementById('main-content');
+    mainContent.innerHTML = `
+      <div class="text-center p-8">
+        <h2 class="text-2xl font-bold text-red-600 mb-4">Error Loading Article</h2>
+        <p class="text-gray-600">Could not load the article. Please try again.</p>
+        <button onclick="loadArticlesPage()" class="mt-4 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors">
+          Back to Articles
+        </button>
+      </div>
+    `;
+  }
+}
+
+// Render article content inline
+function renderArticleInline(postData) {
+  const mainContent = document.getElementById('main-content');
+  
+  // Create tags HTML
+  const tagsHtml = postData.meta.tags && Array.isArray(postData.meta.tags) && postData.meta.tags.length > 0
+    ? postData.meta.tags.map(tag => 
+        `<span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">${escapeHtml(tag.trim())}</span>`
+      ).join(" ")
+    : '';
+  
+  mainContent.innerHTML = `
+    <div class="max-w-4xl mx-auto">
+      <!-- Navigation -->
+      <div class="mb-6">
+        <button onclick="loadArticlesPage()" class="text-blue-600 hover:text-blue-800 transition-colors text-sm font-medium mb-4 flex items-center">
+          <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+          </svg>
+          Back to Articles
+        </button>
+      </div>
+
+      <!-- Article -->
+      <article class="bg-white rounded-lg shadow-sm p-8">
+        <!-- Article header -->
+        <header class="mb-8 border-b pb-6">
+          <h1 class="text-4xl font-bold mb-4 text-gray-900">${escapeHtml(postData.meta.title || 'Untitled')}</h1>
+          
+          <div class="flex flex-wrap items-center gap-4 text-sm text-gray-600 mb-4">
+            ${postData.meta.date ? `
+              <div class="flex items-center">
+                <span class="font-medium">Published:</span>
+                <span class="ml-1">${escapeHtml(postData.meta.date)}</span>
+              </div>
+            ` : ''}
+            
+            ${postData.meta.category ? `
+              <div class="flex items-center">
+                <span class="font-medium">Category:</span>
+                <span class="ml-1 bg-gray-100 px-2 py-1 rounded">${escapeHtml(postData.meta.category)}</span>
+              </div>
+            ` : ''}
+          </div>
+          
+          ${tagsHtml ? `
+            <div class="flex flex-wrap gap-2 mb-4">
+              ${tagsHtml}
+            </div>
+          ` : ''}
+          
+          ${postData.meta.summary ? `
+            <div class="mt-4 p-4 bg-gray-50 rounded-lg border-l-4 border-blue-500">
+              <p class="text-gray-700 italic">${escapeHtml(postData.meta.summary)}</p>
+            </div>
+          ` : ''}
+        </header>
+        
+        <!-- Article body -->
+        <div class="prose prose-lg max-w-none article-content">
+          ${postData.content}
+        </div>
+      </article>
+    </div>
+  `;
+  
+  // Add copy buttons to code blocks
+  addCopyButtons();
+  
+  // Scroll to top
+  window.scrollTo(0, 0);
+}
+
+// Add copy buttons to code blocks
+function addCopyButtons() {
+  const codeBlocks = document.querySelectorAll('pre');
+  codeBlocks.forEach((block) => {
+    const button = document.createElement('button');
+    button.className = 'copy-button absolute top-2 right-2 bg-gray-700 text-white px-2 py-1 text-xs rounded opacity-70 hover:opacity-100 transition-opacity';
+    button.textContent = 'Copy';
+    button.onclick = () => copyCode(block, button);
+    
+    // Make sure the pre element has relative positioning
+    block.style.position = 'relative';
+    block.appendChild(button);
+  });
+}
+
+// Copy code to clipboard
+async function copyCode(block, button) {
+  const code = block.querySelector('code');
+  const text = code ? code.textContent : block.textContent;
+  
+  try {
+    await navigator.clipboard.writeText(text);
+    button.textContent = 'Copied!';
+    button.classList.add('bg-green-600');
+    
+    setTimeout(() => {
+      button.textContent = 'Copy';
+      button.classList.remove('bg-green-600');
+    }, 2000);
+  } catch (err) {
+    console.error('Failed to copy code:', err);
+    button.textContent = 'Failed';
+    setTimeout(() => {
+      button.textContent = 'Copy';
+    }, 2000);
+  }
 }
 
 // Initialize tags page functionality
@@ -250,3 +400,4 @@ function escapeHtml(text) {
 window.initializeArticlesPage = initializeArticlesPage;
 window.initializeTagsPage = initializeTagsPage;
 window.loadPostsByTag = showArticlesByTag;
+window.loadArticleInline = loadArticleInline;

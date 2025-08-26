@@ -35,7 +35,7 @@ document.getElementById('menu-toggle').addEventListener('click', () => {
 });
 
 // Function to load content dynamically
-async function loadContent(page) {
+async function loadContent(page, slug = null) {
   const mainContent = document.getElementById('main-content');
   
   try {
@@ -49,6 +49,12 @@ async function loadContent(page) {
     } else if (page === 'tags') {
       await loadTagsPage();
       return;
+    } else if (page === 'article' && slug) {
+      // Load individual article inline
+      if (window.loadArticleInline) {
+        await window.loadArticleInline(slug);
+        return;
+      }
     }
     
     // Fetch the content for other pages
@@ -126,12 +132,21 @@ document.querySelectorAll('nav a').forEach(link => {
 // Handle browser back/forward buttons
 window.addEventListener('popstate', (event) => {
   const page = event.state?.page || 'home';
-  loadContent(page);
+  const slug = event.state?.slug || null;
+  loadContent(page, slug);
 });
 
 // Handle direct URL access with hash
 function handleInitialLoad() {
   const hash = window.location.hash.substring(1); // Remove # from hash
+  
+  // Check if it's an article URL (format: article/slug)
+  if (hash.startsWith('article/')) {
+    const slug = hash.substring(8); // Remove 'article/' prefix
+    loadContent('article', slug);
+    return;
+  }
+  
   const page = hash || 'home'; // Default to home if no hash
   loadContent(page);
 }
@@ -177,8 +192,6 @@ window.addEventListener('load', () => {
   // Load initial content
   handleInitialLoad();
 });
-
-
 
 // Load articles page
 async function loadArticlesPage() {
