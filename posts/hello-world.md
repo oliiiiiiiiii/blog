@@ -1,7 +1,8 @@
 ---
 title: Hello World
 date: 2025-08-25
-tags: [test]
+category: Life
+tags: [Web Development, Beginner, Tutorial]
 summary: 這是一篇測試 Front Matter 的文章。
 ---
 # Hello World
@@ -10,4 +11,5 @@ summary: 這是一篇測試 Front Matter 的文章。
 
 ```php
 echo "Hello!";
+```
 

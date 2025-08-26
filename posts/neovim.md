@@ -1,7 +1,8 @@
 ---
 title: 在 MacOS 上安裝與設定 Neovim
 date: 2025-07-22
-tags: [neovim]
+category: CS
+tags: [neovim, Tutoria, test]
 summary: 123
 ---
 # 在 MacOS 上安裝與設定 Neovim
