@@ -5,7 +5,7 @@ let allPosts = [];
 
 // Fetch and build posts list from static index (works on GitHub Pages)
 async function loadPostsFromStaticIndex() {
-  const indexRes = await fetch('./posts/index.json');
+  const indexRes = await fetch('./posts/index.json', { cache: 'no-store' });
   if (!indexRes.ok) throw new Error('Failed to load posts index');
   const files = await indexRes.json(); // ["file.md", ...]
 
@@ -13,7 +13,7 @@ async function loadPostsFromStaticIndex() {
   // Load each markdown and parse front matter
   await Promise.all(files.map(async (filename) => {
     const slug = filename.replace(/\.md$/i, '');
-    const res = await fetch(`./posts/${filename}`);
+    const res = await fetch(`./posts/${filename}`, { cache: 'no-store' });
     if (!res.ok) return;
     const markdown = await res.text();
     const { meta, content } = parseFrontMatter(markdown);
