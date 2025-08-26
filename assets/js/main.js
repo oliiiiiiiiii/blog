@@ -178,11 +178,7 @@ window.addEventListener('load', () => {
   handleInitialLoad();
 });
 
-// Fetch posts from API
-async function fetchPosts() {
-  const res = await fetch('./api/posts.php');
-  return await res.json();
-}
+
 
 // Load articles page
 async function loadArticlesPage() {

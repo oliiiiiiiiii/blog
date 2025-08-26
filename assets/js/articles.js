@@ -8,16 +8,13 @@ let allPosts = [];
 // Initialize articles page functionality
 async function initializeArticlesPage() {
   try {
-    console.log('Fetching posts from API...');
     const res = await fetch("./api/posts.php");
-    console.log('API response status:', res.status);
     
     if (!res.ok) {
       throw new Error(`HTTP ${res.status}: ${res.statusText}`);
     }
     
     allPosts = await res.json();
-    console.log('Posts loaded:', allPosts.length);
 
     // Extract unique categories
     const categories = new Set();
@@ -155,16 +152,13 @@ function renderArticles(posts) {
 // Initialize tags page functionality
 async function initializeTagsPage() {
   try {
-    console.log('Fetching posts for tags...');
     const res = await fetch("./api/posts.php");
-    console.log('Tags API response status:', res.status);
     
     if (!res.ok) {
       throw new Error(`HTTP ${res.status}: ${res.statusText}`);
     }
     
     const posts = await res.json();
-    console.log('Posts for tags loaded:', posts.length);
     
     // Count tags
     const tagCounts = {};
