@@ -159,7 +159,7 @@ function renderArticles(posts) {
     article.innerHTML = `
       <div class="space-y-4">
         <h2 class="text-2xl font-bold text-gray-900 leading-tight">
-          <a href="post.php?slug=${encodeURIComponent(post.slug)}" 
+          <a href="post.html?slug=${encodeURIComponent(post.slug)}" 
              class="hover:text-blue-600 transition-colors duration-200 no-underline">
             ${escapeHtml(post.title || 'Untitled')}
           </a>

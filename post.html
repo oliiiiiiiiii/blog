@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <title>Loading... - Oli's Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="./assets/css/style.css"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+<body class="bg-gray-50 text-gray-800" style="font-family: 'Playfair Display', serif;">
+  
+  <!-- Navigation bar -->
+  <nav class="bg-white shadow-sm border-b">
+    <div class="max-w-4xl mx-auto px-4 py-3">
+      <div class="flex items-center justify-between">
+        <a href="/" class="text-xl font-semibold text-gray-800 hover:text-blue-600 transition-colors">
+          ← Back to Blog
+        </a>
+        <div id="post-date" class="text-sm text-gray-500"></div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Article content -->
+  <main class="max-w-4xl mx-auto px-4 py-8">
+    <article class="bg-white rounded-lg shadow-sm p-8">
+      
+      <!-- Article header -->
+      <header class="mb-8 border-b pb-6">
+        <h1 id="post-title" class="text-4xl font-bold mb-4 text-gray-900">Loading...</h1>
+        
+        <div class="flex flex-wrap items-center gap-4 text-sm text-gray-600">
+          <div id="post-date-display" class="flex items-center">
+            <span class="font-medium">Published:</span>
+            <span id="post-date-value" class="ml-1"></span>
+          </div>
+          
+          <div id="post-category" class="flex items-center hidden">
+            <span class="font-medium">Category:</span>
+            <span id="post-category-value" class="ml-1 bg-gray-100 px-2 py-1 rounded"></span>
+          </div>
+        </div>
+        
+        <div id="post-tags" class="flex flex-wrap gap-2 mt-4 hidden"></div>
+        
+        <div id="post-summary" class="mt-4 p-4 bg-gray-50 rounded-lg border-l-4 border-blue-500 hidden">
+          <p id="post-summary-text" class="text-gray-700 italic"></p>
+        </div>
+      </header>
+      
+      <!-- Article body -->
+      <div id="post-content" class="prose prose-lg max-w-none">
+        <div class="flex justify-center items-center h-32">
+          <div class="text-lg text-gray-500">Loading article...</div>
+        </div>
+      </div>
+      
+    </article>
+  </main>
+
+  <!-- Footer with navigation -->
+  <footer class="max-w-4xl mx-auto px-4 py-8">
+    <div class="text-center">
+      <a href="/" class="inline-block bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+        Return to Blog Home
+      </a>
+    </div>
+  </footer>
+
+  <script>
+    // Parse front matter from markdown
+    function parseFrontMatter(markdown) {
+      const fmMatch = markdown.match(/^---\s*[\r\n]([\s\S]*?)\n---\s*[\r\n]([\s\S]*)$/);
+      if (!fmMatch) return { meta: {}, content: markdown };
+      
+      const yaml = fmMatch[1];
+      const content = fmMatch[2];
+      const meta = {};
+      
+      yaml.split(/\r?\n/).forEach(line => {
+        const m = line.match(/^(\w+):\s*(.*)$/);
+        if (!m) return;
+        const key = m[1].trim();
+        let value = m[2].trim();
+        
+        // Handle arrays like tags: [a, b, c]
+        if (/^\[.*\]$/.test(value)) {
+          value = value.replace(/[\[\]]/g, '').split(',').map(v => v.trim()).filter(Boolean);
+        }
+        meta[key] = value;
+      });
+      
+      return { meta, content };
+    }
+
+    // Load and display the post
+    async function loadPost() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const slug = urlParams.get('slug');
+      
+      if (!slug) {
+        document.getElementById('post-content').innerHTML = '<div class="text-center text-red-600"><h2>Error: No post specified</h2></div>';
+        return;
+      }
+
+      try {
+        // Fetch the markdown file
+        const response = await fetch(`./posts/${slug}.md`, { cache: 'no-store' });
+        if (!response.ok) {
+          throw new Error('Post not found');
+        }
+        
+        const markdown = await response.text();
+        const { meta, content } = parseFrontMatter(markdown);
+        
+        // Update page title
+        const title = meta.title || slug.replace(/-/g, ' ');
+        document.title = `${title} - Oli's Blog`;
+        
+        // Update header
+        document.getElementById('post-title').textContent = title;
+        
+        // Update date
+        if (meta.date) {
+          document.getElementById('post-date').textContent = meta.date;
+          document.getElementById('post-date-value').textContent = meta.date;
+        } else {
+          document.getElementById('post-date-display').style.display = 'none';
+        }
+        
+        // Update category
+        if (meta.category) {
+          document.getElementById('post-category').classList.remove('hidden');
+          document.getElementById('post-category-value').textContent = meta.category;
+        }
+        
+        // Update tags
+        if (meta.tags && Array.isArray(meta.tags) && meta.tags.length > 0) {
+          document.getElementById('post-tags').classList.remove('hidden');
+          const tagsHtml = meta.tags.map(tag => 
+            `<span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">${tag}</span>`
+          ).join('');
+          document.getElementById('post-tags').innerHTML = tagsHtml;
+        }
+        
+        // Update summary
+        if (meta.summary) {
+          document.getElementById('post-summary').classList.remove('hidden');
+          document.getElementById('post-summary-text').textContent = meta.summary;
+        }
+        
+        // Render markdown content
+        const html = marked.parse(content);
+        document.getElementById('post-content').innerHTML = html;
+        
+      } catch (error) {
+        console.error('Error loading post:', error);
+        document.getElementById('post-content').innerHTML = `
+          <div class="text-center text-red-600">
+            <h2>Error Loading Post</h2>
+            <p>Could not load the requested post. Please check the URL and try again.</p>
+          </div>
+        `;
+      }
+    }
+
+    // Load post when page loads
+    document.addEventListener('DOMContentLoaded', loadPost);
+  </script>
+
+</body>
+</html>
