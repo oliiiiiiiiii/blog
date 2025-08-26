@@ -45,7 +45,8 @@ function scanPosts() {
                 'slug' => $slug,
                 'title' => $data['title'] ?? 'Untitled',
                 'date' => $data['date'] ?? '',
-                'category' => $data['category'] ?? 'Uncategorized',
+                // Do not force a default category; absence means it only appears in "All"
+                'category' => $data['category'] ?? null,
                 'tags' => $data['tags'] ?? [],
                 'summary' => $data['summary'] ?? '',
                 'content' => $data['content']

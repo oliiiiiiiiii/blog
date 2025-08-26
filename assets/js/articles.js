@@ -6,7 +6,7 @@ let allPosts = [];
 // Initialize articles page functionality
 async function initializeArticlesPage() {
   try {
-    const res = await fetch("/api/posts.php");
+    const res = await fetch("./api/posts.php");
     allPosts = await res.json();
 
     // Extract unique categories
@@ -17,8 +17,12 @@ async function initializeArticlesPage() {
       }
     });
 
-    // Create category list: All + sorted categories
-    const categoryList = ["All", ...Array.from(categories).sort()];
+    // Priority order: All, CS, Life, then others alphabetically
+    const priority = ["All", "CS", "Life"];
+    const otherCategories = Array.from(categories)
+      .filter((c) => !priority.includes(c))
+      .sort((a, b) => a.localeCompare(b));
+    const categoryList = ["All", ...priority.filter(c => c !== "All" && categories.has(c)), ...otherCategories];
 
     renderCategoryButtons(categoryList);
     renderArticles(allPosts); // Show all articles by default
@@ -105,7 +109,7 @@ function renderArticles(posts) {
     article.innerHTML = `
       <div class="space-y-4">
         <h2 class="text-2xl font-bold text-gray-900 leading-tight">
-          <a href="/post.php?slug=${encodeURIComponent(post.slug)}" 
+          <a href="post.php?slug=${encodeURIComponent(post.slug)}" 
              class="hover:text-blue-600 transition-colors duration-200 no-underline">
             ${escapeHtml(post.title || 'Untitled')}
           </a>
@@ -141,7 +145,7 @@ function renderArticles(posts) {
 // Initialize tags page functionality
 async function initializeTagsPage() {
   try {
-    const res = await fetch("/api/posts.php");
+    const res = await fetch("./api/posts.php");
     const posts = await res.json();
     
     // Count tags
