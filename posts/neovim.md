@@ -2,8 +2,8 @@
 title: 在 MacOS 上安裝與設定 Neovim
 date: 2025-07-22
 category: CS
-tags: [neovim, Tutoria, test]
-summary: 123
+tags: [lemp, wordpress, Tutorial]
+summary: 這是一篇跟lemp有關的文章
 ---
 # 在 MacOS 上安裝與設定 Neovim
 ### 前言
