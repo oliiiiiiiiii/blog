@@ -3,61 +3,13 @@
 // Global variable to store posts
 let allPosts = [];
 
-// Fetch and build posts list from static index (works on GitHub Pages)
-async function loadPostsFromStaticIndex() {
-  const indexRes = await fetch('./posts/index.json', { cache: 'no-store' });
-  if (!indexRes.ok) throw new Error('Failed to load posts index');
-  const files = await indexRes.json(); // ["file.md", ...]
-
-  const posts = [];
-  // Load each markdown and parse front matter
-  await Promise.all(files.map(async (filename) => {
-    const slug = filename.replace(/\.md$/i, '');
-    const res = await fetch(`./posts/${filename}`, { cache: 'no-store' });
-    if (!res.ok) return;
-    const markdown = await res.text();
-    const { meta, content } = parseFrontMatter(markdown);
-    posts.push({
-      slug,
-      title: meta.title || 'Untitled',
-      date: meta.date || '',
-      category: meta.category || null,
-      tags: Array.isArray(meta.tags) ? meta.tags : (typeof meta.tags === 'string' && meta.tags ? meta.tags.split(',').map(t=>t.trim()).filter(Boolean) : []),
-      summary: meta.summary || '',
-      content
-    });
-  }));
-
-  // Sort newest first if dates present
-  posts.sort((a,b) => (new Date(b.date) - new Date(a.date)));
-  return posts;
-}
-
-// Simple front matter parser (YAML-like minimal)
-function parseFrontMatter(markdown) {
-  const fmMatch = markdown.match(/^---\s*[\r\n]([\s\S]*?)\n---\s*[\r\n]([\s\S]*)$/);
-  if (!fmMatch) return { meta: {}, content: markdown };
-  const yaml = fmMatch[1];
-  const content = fmMatch[2];
-  const meta = {};
-  yaml.split(/\r?\n/).forEach(line => {
-    const m = line.match(/^(\w+):\s*(.*)$/);
-    if (!m) return;
-    const key = m[1].trim();
-    let value = m[2].trim();
-    if (/^\[.*\]$/.test(value)) {
-      value = value.replace(/[\[\]]/g, '').split(',').map(v => v.trim()).filter(Boolean);
-    }
-    meta[key] = value;
-  });
-  return { meta, content };
-}
+// Note: Using PHP backend for better performance and server-side processing
 
 // Initialize articles page functionality
 async function initializeArticlesPage() {
   try {
-    // Load posts statically from the repo (no PHP required)
-    allPosts = await loadPostsFromStaticIndex();
+    const res = await fetch("./api/posts.php");
+    allPosts = await res.json();
 
     // Extract unique categories
     const categories = new Set();
@@ -159,7 +111,7 @@ function renderArticles(posts) {
     article.innerHTML = `
       <div class="space-y-4">
         <h2 class="text-2xl font-bold text-gray-900 leading-tight">
-          <a href="post.html?slug=${encodeURIComponent(post.slug)}" 
+          <a href="post.php?slug=${encodeURIComponent(post.slug)}" 
              class="hover:text-blue-600 transition-colors duration-200 no-underline">
             ${escapeHtml(post.title || 'Untitled')}
           </a>
@@ -195,7 +147,8 @@ function renderArticles(posts) {
 // Initialize tags page functionality
 async function initializeTagsPage() {
   try {
-    const posts = await loadPostsFromStaticIndex();
+    const res = await fetch("./api/posts.php");
+    const posts = await res.json();
     
     // Count tags
     const tagCounts = {};
