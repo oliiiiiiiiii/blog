@@ -1,32 +1,29 @@
 <?php
-require_once('./php-lib/ParsedownExtra.php');
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 
-function parseFrontMatter($markdown) {
-    if (preg_match('/^---\s*(.*?)\s*---\s*(.*)$/s', $markdown, $matches)) {
-        $yaml = $matches[1];
-        $content = $matches[2];
-
+function parse_front_matter(string $content): array {
+    if (preg_match('/^---\s*(.*?)\s*---\s*(.*)$/s', $content, $matches)) {
+        $raw_yaml = $matches[1];
+        $body = $matches[2];
         $meta = [];
-        foreach (explode("\n", $yaml) as $line) {
-            if (preg_match('/^(\w+):\s*(.*)$/', $line, $m)) {
-                $key = trim($m[1]);
+
+        foreach (explode("\n", $raw_yaml) as $line) {
+            if (preg_match('/^([a-zA-Z0-9_]+):\s*(.*)$/', trim($line), $m)) {
+                $key = strtolower($m[1]);
                 $value = trim($m[2]);
-                
-                // Handle arrays like tags: [a, b, c]
-                if (str_starts_with($value, '[') && str_ends_with($value, ']')) {
-                    $value = array_map('trim', explode(',', trim($value, '[]')));
+                if ($key === 'tags') {
+                    $value = trim($value, '[]');
+                    $value = array_filter(array_map('trim', explode(',', $value)));
                 }
-                
                 $meta[$key] = $value;
             }
         }
-        return $meta;
-    }
-    return [];
-}
 
-function extractMarkdownContent($markdown) {
-    return preg_replace('/^---\s*.*?---\s*/s', '', $markdown);
+        return [$meta, $body];
+    }
+
+    return [[], $content];
 }
 
 // Get slug from URL parameter
@@ -48,14 +45,21 @@ if (!file_exists($filepath)) {
 }
 
 $markdown = file_get_contents($filepath);
-$frontMatter = parseFrontMatter($markdown);
-$content = extractMarkdownContent($markdown);
+[$meta, $content] = parse_front_matter($markdown);
+
+require_once __DIR__ . '/php-lib/Parsedown.php';
+require_once __DIR__ . '/php-lib/ParsedownExtra.php';
+if (!class_exists('ParsedownExtra')) {
+    http_response_code(500);
+    exit("❌ ParsedownExtra 載入失敗！");
+}
 
 $Parsedown = new ParsedownExtra();
+$Parsedown->setMarkupEscaped(true);
 $html = $Parsedown->text($content);
 
 // Get title from front matter or use slug as fallback
-$title = $frontMatter['title'] ?? ucfirst(str_replace('-', ' ', $slug));
+$title = $meta['title'] ?? ucfirst(str_replace('-', ' ', $slug));
 ?>
 
 <!DOCTYPE html>
@@ -226,8 +230,8 @@ $title = $frontMatter['title'] ?? ucfirst(str_replace('-', ' ', $slug));
     }
   </style>
   
-  <?php if (isset($frontMatter['summary'])): ?>
-  <meta name="description" content="<?= htmlspecialchars($frontMatter['summary']) ?>">
+  <?php if (isset($meta['summary'])): ?>
+  <meta name="description" content="<?= htmlspecialchars($meta['summary']) ?>">
   <?php endif; ?>
 </head>
 <body class="bg-gray-50 text-gray-800" style="font-family: 'Playfair Display', serif;">
@@ -240,7 +244,7 @@ $title = $frontMatter['title'] ?? ucfirst(str_replace('-', ' ', $slug));
           ← Back to Blog
         </a>
         <div class="text-sm text-gray-500">
-          <?= htmlspecialchars($frontMatter['date'] ?? '') ?>
+          <?= htmlspecialchars($meta['date'] ?? '') ?>
         </div>
       </div>
     </div>
@@ -255,34 +259,34 @@ $title = $frontMatter['title'] ?? ucfirst(str_replace('-', ' ', $slug));
         <h1 class="text-4xl font-bold mb-4 text-gray-900"><?= htmlspecialchars($title) ?></h1>
         
         <div class="flex flex-wrap items-center gap-4 text-sm text-gray-600">
-          <?php if (isset($frontMatter['date'])): ?>
+          <?php if (isset($meta['date'])): ?>
           <div class="flex items-center">
             <span class="font-medium">Published:</span>
-            <span class="ml-1"><?= htmlspecialchars($frontMatter['date']) ?></span>
+            <span class="ml-1"><?= htmlspecialchars($meta['date']) ?></span>
           </div>
           <?php endif; ?>
           
-          <?php if (isset($frontMatter['category'])): ?>
+          <?php if (isset($meta['category'])): ?>
           <div class="flex items-center">
             <span class="font-medium">Category:</span>
-            <span class="ml-1 bg-gray-100 px-2 py-1 rounded"><?= htmlspecialchars($frontMatter['category']) ?></span>
+            <span class="ml-1 bg-gray-100 px-2 py-1 rounded"><?= htmlspecialchars($meta['category']) ?></span>
           </div>
           <?php endif; ?>
         </div>
         
-        <?php if (isset($frontMatter['tags']) && is_array($frontMatter['tags'])): ?>
+        <?php if (isset($meta['tags']) && is_array($meta['tags']) && !empty($meta['tags'])): ?>
         <div class="flex flex-wrap gap-2 mt-4">
-          <?php foreach ($frontMatter['tags'] as $tag): ?>
+          <?php foreach ($meta['tags'] as $tag): ?>
           <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">
-            <?= htmlspecialchars(trim($tag)) ?>
+            <?= htmlspecialchars($tag) ?>
           </span>
           <?php endforeach; ?>
         </div>
         <?php endif; ?>
         
-        <?php if (isset($frontMatter['summary'])): ?>
+        <?php if (isset($meta['summary'])): ?>
         <div class="mt-4 p-4 bg-gray-50 rounded-lg border-l-4 border-blue-500">
-          <p class="text-gray-700 italic"><?= htmlspecialchars($frontMatter['summary']) ?></p>
+          <p class="text-gray-700 italic"><?= htmlspecialchars($meta['summary']) ?></p>
         </div>
         <?php endif; ?>
       </header>
