@@ -17,7 +17,7 @@
   <nav class="bg-white shadow-sm border-b">
     <div class="max-w-4xl mx-auto px-4 py-3">
       <div class="flex items-center justify-between">
-        <a href="/" class="text-xl font-semibold text-gray-800 hover:text-blue-600 transition-colors">
+        <a href="#" onclick="goBack()" class="text-xl font-semibold text-gray-800 hover:text-blue-600 transition-colors">
           ← Back to Blog
         </a>
         <div id="post-date" class="text-sm text-gray-500"></div>
@@ -65,7 +65,7 @@
   <!-- Footer with navigation -->
   <footer class="max-w-4xl mx-auto px-4 py-8">
     <div class="text-center">
-      <a href="/" class="inline-block bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+      <a href="#" onclick="goBack()" class="inline-block bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors">
         Return to Blog Home
       </a>
     </div>
@@ -165,6 +165,15 @@
             <p>Could not load the requested post. Please check the URL and try again.</p>
           </div>
         `;
+      }
+    }
+
+    // Go back to previous page or home if no history
+    function goBack() {
+      if (document.referrer && document.referrer.includes(window.location.origin)) {
+        window.history.back();
+      } else {
+        window.location.href = '/';
       }
     }
 
