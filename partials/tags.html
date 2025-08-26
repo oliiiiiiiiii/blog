@@ -1,94 +1,9 @@
 <div class="max-w-4xl mx-auto">
   <section class="py-16">
-    <h1 class="text-4xl font-bold mb-8 text-gray-800">Tags</h1>
-    <p class="text-lg text-gray-600 mb-12">Explore articles by topics and categories</p>
-    
-    <!-- Tag Cloud -->
-    <div class="mb-12">
-      <h2 class="text-2xl font-semibold mb-6 text-gray-800">Popular Tags</h2>
-      <div class="flex flex-wrap gap-3">
-        <a href="#" class="bg-blue-100 hover:bg-blue-200 text-blue-800 px-4 py-2 rounded-full text-sm transition-colors">
-          Web Development <span class="ml-1 text-xs">(3)</span>
-        </a>
-        <a href="#" class="bg-green-100 hover:bg-green-200 text-green-800 px-4 py-2 rounded-full text-sm transition-colors">
-          JavaScript <span class="ml-1 text-xs">(2)</span>
-        </a>
-        <a href="#" class="bg-purple-100 hover:bg-purple-200 text-purple-800 px-4 py-2 rounded-full text-sm transition-colors">
-          CSS <span class="ml-1 text-xs">(2)</span>
-        </a>
-        <a href="#" class="bg-yellow-100 hover:bg-yellow-200 text-yellow-800 px-4 py-2 rounded-full text-sm transition-colors">
-          Tutorial <span class="ml-1 text-xs">(1)</span>
-        </a>
-        <a href="#" class="bg-red-100 hover:bg-red-200 text-red-800 px-4 py-2 rounded-full text-sm transition-colors">
-          Beginner <span class="ml-1 text-xs">(1)</span>
-        </a>
-        <a href="#" class="bg-indigo-100 hover:bg-indigo-200 text-indigo-800 px-4 py-2 rounded-full text-sm transition-colors">
-          Design <span class="ml-1 text-xs">(1)</span>
-        </a>
-        <a href="#" class="bg-pink-100 hover:bg-pink-200 text-pink-800 px-4 py-2 rounded-full text-sm transition-colors">
-          Responsive <span class="ml-1 text-xs">(1)</span>
-        </a>
-        <a href="#" class="bg-gray-100 hover:bg-gray-200 text-gray-800 px-4 py-2 rounded-full text-sm transition-colors">
-          Programming <span class="ml-1 text-xs">(1)</span>
-        </a>
-        <a href="#" class="bg-teal-100 hover:bg-teal-200 text-teal-800 px-4 py-2 rounded-full text-sm transition-colors">
-          ES6+ <span class="ml-1 text-xs">(1)</span>
-        </a>
-      </div>
-    </div>
-    
-    <!-- Tag Categories -->
-    <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-      <!-- Development -->
-      <div class="bg-white rounded-lg shadow-md p-6">
-        <h3 class="text-xl font-semibold mb-4 text-gray-800 flex items-center">
-          <i class="fas fa-code mr-2 text-blue-600"></i>
-          Development
-        </h3>
-        <div class="space-y-2">
-          <a href="#" class="block text-blue-600 hover:text-blue-800 transition-colors">Web Development (3)</a>
-          <a href="#" class="block text-blue-600 hover:text-blue-800 transition-colors">JavaScript (2)</a>
-          <a href="#" class="block text-blue-600 hover:text-blue-800 transition-colors">Programming (1)</a>
-        </div>
-      </div>
-      
-      <!-- Design -->
-      <div class="bg-white rounded-lg shadow-md p-6">
-        <h3 class="text-xl font-semibold mb-4 text-gray-800 flex items-center">
-          <i class="fas fa-palette mr-2 text-purple-600"></i>
-          Design
-        </h3>
-        <div class="space-y-2">
-          <a href="#" class="block text-purple-600 hover:text-purple-800 transition-colors">CSS (2)</a>
-          <a href="#" class="block text-purple-600 hover:text-purple-800 transition-colors">Design (1)</a>
-          <a href="#" class="block text-purple-600 hover:text-purple-800 transition-colors">Responsive (1)</a>
-        </div>
-      </div>
-      
-      <!-- Learning -->
-      <div class="bg-white rounded-lg shadow-md p-6">
-        <h3 class="text-xl font-semibold mb-4 text-gray-800 flex items-center">
-          <i class="fas fa-graduation-cap mr-2 text-green-600"></i>
-          Learning
-        </h3>
-        <div class="space-y-2">
-          <a href="#" class="block text-green-600 hover:text-green-800 transition-colors">Tutorial (1)</a>
-          <a href="#" class="block text-green-600 hover:text-green-800 transition-colors">Beginner (1)</a>
-          <a href="#" class="block text-green-600 hover:text-green-800 transition-colors">ES6+ (1)</a>
-        </div>
-      </div>
-    </div>
-    
-    <!-- Search by tag -->
-    <div class="mt-12 bg-gray-50 rounded-lg p-6">
-      <h3 class="text-lg font-semibold mb-4 text-gray-800">Search by Tag</h3>
-      <div class="flex gap-4">
-        <input type="text" placeholder="Enter tag name..." 
-               class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
-        <button class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition-colors">
-          Search
-        </button>
-      </div>
-    </div>
+    <main id="main-content" class="main-custom-bg flex-1 overflow-y-auto p-6">
+      <h1 class="text-4xl font-bold mb-8 text-gray-800">All Tags</h1>
+      <div id="tag-list"></div>
+    </main>
   </section>
 </div>
+<script src="../assets/js/main.js"></script>

@@ -35,5 +35,21 @@ foreach (scandir($dir) as $file) {
     }
 }
 
+if (isset($_GET['tags'])) {
+  $posts = scanPosts();
+  $tagCounts = [];
+
+  foreach ($posts as $post) {
+    foreach ($post['meta']['tags'] ?? [] as $tag) {
+      $tagCounts[$tag] = ($tagCounts[$tag] ?? 0) + 1;
+    }
+  }
+
+  ksort($tagCounts); // 按字母排序
+  echo json_encode($tagCounts);
+  exit;
+}
+
+
 header('Content-Type: application/json');
 echo json_encode($posts);
