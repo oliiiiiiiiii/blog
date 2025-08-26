@@ -17,8 +17,7 @@ document.getElementById('menu-toggle').addEventListener('click', () => {
       });
     }, 100);
     
-  }
-  else {
+  } else {
     menuToggle.classList.remove('active');
     
     menuItems.forEach(item => {
@@ -43,7 +42,16 @@ async function loadContent(page) {
     // Show loading state
     mainContent.innerHTML = '<div class="flex justify-center items-center h-64"><div class="text-lg">Loading...</div></div>';
     
-    // Fetch the content
+    // Special handling for different pages
+    if (page === 'articles') {
+      await loadArticlesPage();
+      return;
+    } else if (page === 'tags') {
+      await loadTagsPage();
+      return;
+    }
+    
+    // Fetch the content for other pages
     const response = await fetch(`partials/${page}.html`);
     
     if (!response.ok) {
@@ -68,10 +76,6 @@ async function loadContent(page) {
       </div>
     `;
   }
-}
-
-if (page === 'tags') {
-  loadTags();
 }
 
 // Function to update active navigation styling
@@ -146,8 +150,7 @@ window.addEventListener('resize', () => {
     menuItems.forEach(item => {
       item.classList.add('animate-in');
     });
-  }
-  else {
+  } else {
     // Mobile - ensure menu starts hidden
     if (!sidebar.classList.contains('menu-visible')) {
       sidebar.classList.add('hidden', 'menu-hidden');
@@ -167,8 +170,7 @@ window.addEventListener('load', () => {
     menuItems.forEach(item => {
       item.classList.add('animate-in');
     });
-  }
-  else {
+  } else {
     sidebar.classList.add('hidden', 'menu-hidden');
   }
   
@@ -176,41 +178,183 @@ window.addEventListener('load', () => {
   handleInitialLoad();
 });
 
+// Fetch posts from API
 async function fetchPosts() {
   const res = await fetch('./api/posts.php');
   return await res.json();
 }
 
-function loadTags() {
-  fetch('/api/posts.php?tags')
-    .then(res => res.json())
-    .then(tagCounts => {
-      const container = document.getElementById('tag-list');
-      container.innerHTML = '';
+// Load articles page
+async function loadArticlesPage() {
+  try {
+    const posts = await fetchPosts();
+    
+    const categories = new Set();
+    posts.forEach((post) => {
+      if (post.category) categories.add(post.category);
+    });
 
-      for (const [tag, count] of Object.entries(tagCounts)) {
-        const tagBtn = document.createElement('a');
-        tagBtn.href = `#tag-${encodeURIComponent(tag)}`;
-        tagBtn.className = 'bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-sm font-medium hover:bg-blue-200 transition';
-        tagBtn.textContent = `${tag} (${count})`;
-        container.appendChild(tagBtn);
+    const allCategories = ["All", ...Array.from(categories).sort()];
+    
+    // Create the articles page structure
+    const mainContent = document.getElementById('main-content');
+    mainContent.innerHTML = `
+      <div class="max-w-4xl mx-auto">
+        <section class="py-16">
+          <h1 class="text-4xl font-bold mb-8 text-gray-800">Articles</h1>
+          <div id="category-buttons" class="mb-6"></div>
+          <div id="articles-container" class="space-y-8"></div>
+        </section>
+      </div>
+    `;
+    
+    renderCategoryButtons(allCategories);
+    renderPosts(posts); // Default show all
+    
+    // Update URL and navigation
+    window.history.pushState({page: 'articles'}, '', '#articles');
+    updateActiveNavigation('articles');
+    
+  } catch (error) {
+    console.error('Error loading articles:', error);
+  }
+}
+
+// Load tags page
+async function loadTagsPage() {
+  try {
+    const posts = await fetchPosts();
+    const tagCounts = {};
+
+    posts.forEach(post => {
+      if (post.tags && Array.isArray(post.tags)) {
+        post.tags.forEach(tag => {
+          tagCounts[tag] = (tagCounts[tag] || 0) + 1;
+        });
       }
     });
+
+    const mainContent = document.getElementById('main-content');
+    mainContent.innerHTML = `
+      <div class="max-w-4xl mx-auto">
+        <section class="py-16">
+          <h1 class="text-4xl font-bold mb-8 text-gray-800">All Tags</h1>
+          <div id="tag-list" class="flex flex-wrap gap-4"></div>
+        </section>
+      </div>
+    `;
+
+    const tagListDiv = document.getElementById('tag-list');
+    
+    Object.entries(tagCounts)
+      .sort(([a], [b]) => a.localeCompare(b))
+      .forEach(([tag, count]) => {
+        const tagCard = document.createElement('div');
+        tagCard.className = 'cursor-pointer px-4 py-2 bg-gray-100 hover:bg-blue-100 rounded shadow text-gray-700 font-medium transition';
+        tagCard.textContent = `${tag} (${count})`;
+        tagCard.dataset.tag = tag;
+
+        tagCard.addEventListener('click', () => {
+          loadPostsByTag(tag, posts);
+        });
+
+        tagListDiv.appendChild(tagCard);
+      });
+      
+    // Update URL and navigation
+    window.history.pushState({page: 'tags'}, '', '#tags');
+    updateActiveNavigation('tags');
+    
+  } catch (error) {
+    console.error('Error loading tags:', error);
+  }
 }
 
-// 新增函式：載入帶有指定 tag 的文章列表
-function loadPostsByTag(tag) {
-  fetch('/api/posts.php')
-    .then(res => res.json())
-    .then(posts => {
-      const filtered = posts.filter(post => post.meta.tags?.includes(tag));
+// Render category buttons
+function renderCategoryButtons(categories) {
+  const container = document.getElementById('category-buttons');
+  if (!container) return;
+  
+  container.innerHTML = '';
+  categories.forEach((cat) => {
+    const btn = document.createElement('button');
+    btn.textContent = cat;
+    btn.dataset.category = cat;
+    btn.className = 'category-button px-4 py-2 rounded-full border text-sm hover:bg-blue-100 mr-2 mb-2';
+    if (cat === 'All') btn.classList.add('bg-blue-500', 'text-white');
+    
+    btn.addEventListener('click', async () => {
+      const posts = await fetchPosts();
+      const buttons = document.querySelectorAll('.category-button');
+      buttons.forEach((b) => b.classList.remove('bg-blue-500', 'text-white'));
+      btn.classList.add('bg-blue-500', 'text-white');
+
+      const filtered = cat === 'All' ? posts : posts.filter((p) => p.category === cat);
+      renderPosts(filtered);
+    });
+    
+    container.appendChild(btn);
+  });
+}
+
+// Render posts
+function renderPosts(posts) {
+  const container = document.getElementById('articles-container');
+  if (!container) return;
+  
+  container.innerHTML = '';
+
+  if (posts.length === 0) {
+    container.innerHTML = '<p class="text-gray-500 text-center">No articles in this category.</p>';
+    return;
+  }
+
+  posts.forEach((post) => {
+    const article = document.createElement('article');
+    article.className = 'bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow';
+
+    const tagsHtml = post.tags && Array.isArray(post.tags) 
+      ? post.tags.map(tag => `<span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm">${tag}</span>`).join('')
+      : '';
+
+    article.innerHTML = `
+      <div class="flex flex-col gap-6">
+        <div class="flex-1">
+          <h2 class="text-2xl font-semibold mb-3 text-gray-800 hover:text-blue-600 transition-colors">
+            <a href="/post.php?slug=${post.slug}" class="no-underline">${post.title || 'Untitled'}</a>
+          </h2>
+          <p class="text-gray-600 mb-4 leading-relaxed">${post.summary || ''}</p>
+          <div class="flex flex-wrap gap-2 mb-4">
+            ${tagsHtml}
+          </div>
+          <div class="text-sm text-gray-500">
+            <span>${post.date || ''}</span>
+          </div>
+        </div>
+      </div>
+    `;
+
+    container.appendChild(article);
+  });
+}
+
+// Load posts by tag
+function loadPostsByTag(tag, allPosts = null) {
+  if (!allPosts) {
+    fetchPosts().then(posts => {
+      const filtered = posts.filter(post => post.tags && post.tags.includes(tag));
       renderArticles(filtered, `Tag: ${tag}`);
     });
+  } else {
+    const filtered = allPosts.filter(post => post.tags && post.tags.includes(tag));
+    renderArticles(filtered, `Tag: ${tag}`);
+  }
 }
 
-// 重複利用你文章的卡片樣板來渲染文章
+// Render articles with title
 function renderArticles(posts, title = 'Articles') {
   const container = document.getElementById('main-content');
+  if (!container) return;
 
   container.innerHTML = `
     <div class="max-w-4xl mx-auto">
@@ -222,16 +366,16 @@ function renderArticles(posts, title = 'Articles') {
               <div class="flex flex-col md:flex-row gap-6">
                 <div class="flex-1">
                   <h2 class="text-2xl font-semibold mb-3 text-gray-800 hover:text-blue-600 transition-colors">
-                    <a href="/post/${post.slug}" class="no-underline">${post.meta.title}</a>
+                    <a href="/post.php?slug=${post.slug}" class="no-underline">${post.title || 'Untitled'}</a>
                   </h2>
-                  <p class="text-gray-600 mb-4 leading-relaxed">${post.meta.summary ?? ''}</p>
+                  <p class="text-gray-600 mb-4 leading-relaxed">${post.summary || ''}</p>
                   <div class="flex flex-wrap gap-2 mb-4">
-                    ${post.meta.tags?.map(tag => `
+                    ${post.tags && Array.isArray(post.tags) ? post.tags.map(tag => `
                       <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm">${tag}</span>
-                    `).join('')}
+                    `).join('') : ''}
                   </div>
                   <div class="text-sm text-gray-500">
-                    <span>${post.meta.date ?? ''}</span>
+                    <span>${post.date || ''}</span>
                   </div>
                 </div>
               </div>
@@ -241,53 +385,4 @@ function renderArticles(posts, title = 'Articles') {
       </section>
     </div>
   `;
-}
-
-loadPostsByTag('ubuntu') // 顯示有 ubuntu tag 的文章
-renderArticles(posts, 'All Articles') // 顯示所有文章
-
-document.addEventListener('click', e => {
-  if (e.target.matches('.tag-button')) {
-    const tag = e.target.dataset.tag;
-    loadPostsByTag(tag);
-  }
-});
-
-async function renderTagStats() {
-  const posts = await loadPosts(); // 從 /api/posts.php 抓全部資料
-  const tagCounts = {};
-
-  posts.forEach(post => {
-    post.meta.tags?.forEach(tag => {
-      tagCounts[tag] = (tagCounts[tag] || 0) + 1;
-    });
-  });
-
-  const tagListDiv = document.getElementById('tag-list');
-  tagListDiv.innerHTML = '';
-
-  const container = document.createElement('div');
-  container.className = 'flex flex-wrap gap-4';
-
-  Object.entries(tagCounts).forEach(([tag, count]) => {
-    const tagCard = document.createElement('div');
-    tagCard.className =
-      'cursor-pointer px-4 py-2 bg-gray-100 hover:bg-blue-100 rounded shadow text-gray-700 font-medium transition';
-    tagCard.textContent = `${tag} (${count})`;
-    tagCard.dataset.tag = tag;
-
-    // 綁定點擊事件
-    tagCard.addEventListener('click', () => {
-      loadPostsByTag(tag); // 重新渲染文章列表
-      document.querySelector('h1').textContent = tag;
-    });
-
-    container.appendChild(tagCard);
-  });
-
-  tagListDiv.appendChild(container);
-}
-
-if (window.location.pathname.includes('tags.html')) {
-  renderTagStats();
 }

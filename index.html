@@ -25,7 +25,7 @@
   <div class="flex flex-col md:flex-row h-full">
 
     <aside id="sidebar"
-      class="aside-custom md:block hidden w-full md:w-1/5 p-6 flex-col items-center space-y-6 md:flexmd:border-b-0 text-white">
+      class="aside-custom md:block hidden w-full md:w-1/5 p-6 flex-col items-center space-y-6 md:flex md:border-b-0 text-white">
 
       <img src="./assets/images/profile.jpg" alt="Profile" class="menu-item mt-4 w-28 h-28 rounded-full shadow mx-auto" />
       <h1 class="menu-item text-center text-3xl font-semibold">Olí.</h1>
@@ -53,7 +53,16 @@
 
     <!-- main content -->
     <main id="main-content" class="flex-1 overflow-y-auto p-6">
-      <!-- javascript loading main content -->
+      <!-- Default home content -->
+      <div class="max-w-4xl mx-auto">
+        <section class="py-16 text-center">
+          <h1 class="text-6xl font-bold mb-8 text-gray-800">Welcome</h1>
+          <p class="text-xl text-gray-600 mb-8">This is Oli's personal blog where I share my thoughts and experiences.</p>
+          <div class="prose prose-lg mx-auto text-left">
+            <p>Feel free to explore my articles and get to know more about me through the navigation menu.</p>
+          </div>
+        </section>
+      </div>
     </main>
   </div>
 
