@@ -12,7 +12,7 @@ let navigationContext = {
 // Note: Using PHP backend for better performance and server-side processing
 
 // Initialize articles page functionality
-async function initializeArticlesPage() {
+async function initializeArticlesPage(initialCategory = 'All') {
   try {
     const res = await fetch("./api/posts.php");
     
@@ -25,7 +25,7 @@ async function initializeArticlesPage() {
     // Set navigation context
     navigationContext = {
       source: 'articles',
-      category: 'All',
+      category: initialCategory,
       tag: null,
       posts: allPosts
     };
@@ -45,8 +45,15 @@ async function initializeArticlesPage() {
       .sort((a, b) => a.localeCompare(b));
     const categoryList = ["All", ...priority.filter(c => c !== "All" && categories.has(c)), ...otherCategories];
 
-    renderCategoryButtons(categoryList);
-    renderArticles(allPosts); // Show all articles by default
+    renderCategoryButtons(categoryList, initialCategory);
+    
+    // Show articles based on initial category
+    const initialPosts = initialCategory === "All" 
+      ? allPosts 
+      : allPosts.filter((post) => post.category === initialCategory);
+    
+    navigationContext.posts = initialPosts;
+    renderArticles(initialPosts);
 
   } catch (error) {
     console.error('Error loading articles:', error);
@@ -58,7 +65,7 @@ async function initializeArticlesPage() {
 }
 
 // Render category filter buttons
-function renderCategoryButtons(categories) {
+function renderCategoryButtons(categories, activeCategory = 'All') {
   const container = document.getElementById("category-buttons");
   if (!container) return;
   
@@ -71,7 +78,7 @@ function renderCategoryButtons(categories) {
     btn.className = "category-button px-6 py-2 rounded-full text-sm font-medium mr-4 mb-2 transition-all duration-200";
     
     // Style for active/inactive states
-    if (category === "All") {
+    if (category === activeCategory) {
       btn.classList.add("bg-blue-600", "text-white", "shadow-md");
     } else {
       btn.classList.add("bg-gray-100", "text-gray-700", "hover:bg-gray-200");
@@ -463,17 +470,9 @@ async function loadArticlesPageWithCategory(category = 'All') {
     const mainContent = document.getElementById('main-content');
     mainContent.innerHTML = html;
     
-    // Initialize articles functionality
+    // Initialize articles functionality with the specific category
     if (window.initializeArticlesPage) {
-      await window.initializeArticlesPage();
-      
-      // Set the correct category as active and filter posts
-      setTimeout(() => {
-        const categoryButton = document.querySelector(`[data-category="${category}"]`);
-        if (categoryButton) {
-          categoryButton.click();
-        }
-      }, 100);
+      await window.initializeArticlesPage(category);
     }
     
     // Update URL and navigation
