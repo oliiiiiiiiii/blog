@@ -1,13 +1,25 @@
 <?php
-// Enable error reporting for debugging
+// Force JSON output with no stray HTML
+ob_start();
+header('Content-Type: application/json; charset=utf-8');
+
+// Robust error handling: convert warnings/notices to exceptions and avoid HTML error output
 error_reporting(E_ALL);
-ini_set('display_errors', 1);
+ini_set('display_errors', '0');
+ini_set('html_errors', '0');
+set_error_handler(function ($severity, $message, $file, $line) {
+    if (!(error_reporting() & $severity)) {
+        return false; // respect @ operator
+    }
+    throw new ErrorException($message, 0, $severity, $file, $line);
+});
 
 try {
     require_once __DIR__ . '/../php-lib/ParsedownExtra.php';
-} catch (Exception $e) {
-    header('Content-Type: application/json');
-    echo json_encode(['error' => 'Failed to load Parsedown: ' . $e->getMessage()]);
+} catch (Throwable $e) {
+    http_response_code(500);
+    ob_clean();
+    echo json_encode(['error' => 'Failed to load Parsedown', 'detail' => $e->getMessage()]);
     exit;
 }
 
@@ -76,27 +88,35 @@ function scanPosts() {
 
 // Handle tags request
 if (isset($_GET['tags'])) {
-    $posts = scanPosts();
-    $tagCounts = [];
-
-    foreach ($posts as $post) {
-        foreach ($post['tags'] as $tag) {
-            $tagCounts[$tag] = ($tagCounts[$tag] ?? 0) + 1;
+    try {
+        $posts = scanPosts();
+        $tagCounts = [];
+        foreach ($posts as $post) {
+            foreach ($post['tags'] as $tag) {
+                if ($tag === '' || $tag === null) continue;
+                $tagCounts[$tag] = ($tagCounts[$tag] ?? 0) + 1;
+            }
         }
+        ksort($tagCounts);
+        ob_clean();
+        echo json_encode($tagCounts);
+        exit;
+    } catch (Throwable $e) {
+        http_response_code(500);
+        ob_clean();
+        echo json_encode(['error' => 'Failed to compute tags', 'detail' => $e->getMessage()]);
+        exit;
     }
-
-    ksort($tagCounts);
-    header('Content-Type: application/json');
-    echo json_encode($tagCounts);
-    exit;
 }
 
 // Return all posts
-header('Content-Type: application/json');
 try {
     $posts = scanPosts();
+    ob_clean();
     echo json_encode($posts);
-} catch (Exception $e) {
-    echo json_encode(['error' => 'Failed to scan posts: ' . $e->getMessage()]);
+} catch (Throwable $e) {
+    http_response_code(500);
+    ob_clean();
+    echo json_encode(['error' => 'Failed to scan posts', 'detail' => $e->getMessage()]);
 }
 ?>
