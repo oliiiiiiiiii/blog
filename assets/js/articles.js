@@ -8,8 +8,16 @@ let allPosts = [];
 // Initialize articles page functionality
 async function initializeArticlesPage() {
   try {
+    console.log('Fetching posts from API...');
     const res = await fetch("./api/posts.php");
+    console.log('API response status:', res.status);
+    
+    if (!res.ok) {
+      throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+    }
+    
     allPosts = await res.json();
+    console.log('Posts loaded:', allPosts.length);
 
     // Extract unique categories
     const categories = new Set();
@@ -33,7 +41,7 @@ async function initializeArticlesPage() {
     console.error('Error loading articles:', error);
     const container = document.getElementById('articles-container');
     if (container) {
-      container.innerHTML = '<p class="text-red-500 text-center">Error loading articles. Please try again later.</p>';
+      container.innerHTML = `<p class="text-red-500 text-center">Error loading articles: ${error.message}</p>`;
     }
   }
 }
@@ -147,8 +155,16 @@ function renderArticles(posts) {
 // Initialize tags page functionality
 async function initializeTagsPage() {
   try {
+    console.log('Fetching posts for tags...');
     const res = await fetch("./api/posts.php");
+    console.log('Tags API response status:', res.status);
+    
+    if (!res.ok) {
+      throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+    }
+    
     const posts = await res.json();
+    console.log('Posts for tags loaded:', posts.length);
     
     // Count tags
     const tagCounts = {};
@@ -169,7 +185,7 @@ async function initializeTagsPage() {
     console.error('Error loading tags:', error);
     const container = document.getElementById('tag-list');
     if (container) {
-      container.innerHTML = '<p class="text-red-500 text-center">Error loading tags. Please try again later.</p>';
+      container.innerHTML = `<p class="text-red-500 text-center">Error loading tags: ${error.message}</p>`;
     }
   }
 }
