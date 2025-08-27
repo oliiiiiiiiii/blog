@@ -67,9 +67,14 @@ async function loadContent(page, slug = null) {
     const content = await response.text();
     mainContent.innerHTML = content;
     
+    // Initialize page-specific functionality
+    if (page === 'home' && typeof initializeHomePage === 'function') {
+      await initializeHomePage();
+    }
+
     // Update URL hash without triggering page reload
     window.history.pushState({page}, '', `#${page}`);
-    
+
     // Update active navigation state
     updateActiveNavigation(page);
     
@@ -252,6 +257,43 @@ async function loadTagsPage() {
         <p class="text-gray-600">Could not load tags. Please try again later.</p>
       </div>
     `;
+  }
+}
+
+// Initialize home page recent posts
+async function initializeHomePage() {
+  try {
+    const res = await fetch('./api/posts.php');
+    if (!res.ok) {
+      throw new Error(`HTTP ${res.status}`);
+    }
+
+    const posts = await res.json();
+    const container = document.getElementById('recent-posts');
+    if (!container) return;
+
+    container.innerHTML = '';
+    posts.slice(0, 2).forEach(post => {
+      const article = document.createElement('article');
+      article.className = 'bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow cursor-pointer';
+      article.innerHTML = `
+        <h3 class="text-xl font-semibold mb-2 text-gray-800">${escapeHtml(post.title || '')}</h3>
+        ${post.summary ? `<p class="text-gray-600 mb-4">${escapeHtml(post.summary)}</p>` : ''}
+        ${post.date ? `<span class="text-sm text-gray-500">${escapeHtml(post.date)}</span>` : ''}
+      `;
+
+      article.addEventListener('click', () => {
+        loadContent('article', post.slug);
+      });
+
+      container.appendChild(article);
+    });
+  } catch (error) {
+    console.error('Error loading recent posts:', error);
+    const container = document.getElementById('recent-posts');
+    if (container) {
+      container.innerHTML = '<p class="text-gray-500">Failed to load posts.</p>';
+    }
   }
 }
 
