@@ -216,9 +216,6 @@ async function loadArticleInline(slug) {
 }
 
 // Render article content inline
-// Replace this function in your assets/js/articles.js file
-
-// Render article content inline
 function renderArticleInline(postData) {
   const mainContent = document.getElementById('main-content');
   
@@ -285,7 +282,7 @@ function renderArticleInline(postData) {
           
           ${postData.meta.summary ? `
             <div class="mt-4 p-4 bg-gray-50 rounded-lg border-l-4 border-blue-500">
-              <p class="text-gray-700">${escapeHtml(postData.meta.summary)}</p>
+              <p class="text-gray-700 italic">${escapeHtml(postData.meta.summary)}</p>
             </div>
           ` : ''}
         </header>
@@ -300,11 +297,6 @@ function renderArticleInline(postData) {
   
   // Add copy buttons to code blocks
   addCopyButtons();
-  
-  // Create go to top button for article pages
-  if (typeof createGoToTopButton === 'function') {
-    createGoToTopButton();
-  }
   
   // Scroll to top
   window.scrollTo(0, 0);
