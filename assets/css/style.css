@@ -20,7 +20,8 @@
   font-style: normal;
 }
 
-.aside-hover a:hover {
+.aside-hover a:hover,
+.aside-hover a.active {
   color: rgb(101,91,89);
   transition: color 0.3s ease;
 }

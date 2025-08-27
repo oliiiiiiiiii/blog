@@ -92,10 +92,11 @@ async function loadContent(page, slug = null) {
 // Function to update active navigation styling
 function updateActiveNavigation(activePage) {
   const navLinks = document.querySelectorAll('nav a');
+  const pageToActivate = activePage === 'article' ? 'articles' : activePage;
   navLinks.forEach(link => {
     link.classList.remove('active');
     const href = link.getAttribute('href');
-    if (href === `#${activePage}`) {
+    if (href === `#${pageToActivate}`) {
       link.classList.add('active');
     }
   });

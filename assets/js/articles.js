@@ -199,7 +199,7 @@ async function loadArticleInline(slug) {
     
     // Update URL without page reload
     window.history.pushState({page: 'article', slug: slug}, '', `#article/${slug}`);
-    
+    updateActiveNavigation('article');
   } catch (error) {
     console.error('Error loading article:', error);
     const mainContent = document.getElementById('main-content');
