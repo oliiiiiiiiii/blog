@@ -293,13 +293,32 @@ function renderArticleInline(postData) {
         </div>
       </article>
     </div>
+    <button id="back-to-top" aria-label="Back to top" class="hidden fixed bottom-6 right-6 bg-gray-700 text-white p-3 rounded-full shadow-lg hover:bg-gray-800 transition-colors">
+      <i class="fa-regular fa-circle-up text-2xl"></i>
+    </button>
   `;
-  
+
   // Add copy buttons to code blocks
   addCopyButtons();
-  
+
+  // Back to top button functionality
+  const backToTopBtn = document.getElementById('back-to-top');
+  if (backToTopBtn) {
+    backToTopBtn.addEventListener('click', () => {
+      mainContent.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    mainContent.addEventListener('scroll', () => {
+      if (mainContent.scrollTop > 300) {
+        backToTopBtn.classList.remove('hidden');
+      } else {
+        backToTopBtn.classList.add('hidden');
+      }
+    });
+  }
+
   // Scroll to top
-  window.scrollTo(0, 0);
+  mainContent.scrollTo(0, 0);
 }
 
 // Add copy buttons to code blocks
