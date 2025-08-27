@@ -283,6 +283,9 @@ async function initializeHomePage() {
       `;
 
       article.addEventListener('click', () => {
+        if (typeof navigationContext !== 'undefined') {
+          navigationContext = { source: 'home', category: null, tag: null, posts: null };
+        }
         loadContent('article', post.slug);
       });
 
