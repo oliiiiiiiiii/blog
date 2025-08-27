@@ -260,3 +260,115 @@
     transform: translateY(0);
   }
 }
+
+/* Add this to your assets/css/style.css file */
+
+/* Updated category button styles for articles page */
+.category-button {
+  position: relative;
+  transition: all 0.3s ease;
+  background: transparent !important;
+  border: none;
+  box-shadow: none !important;
+  transform: none !important;
+}
+
+.category-button::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: -2px;
+  left: 50%;
+  background: linear-gradient(90deg, #92795d, #b8976a);
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transform: translateX(-50%);
+  border-radius: 1px;
+}
+
+.category-button:hover::after,
+.category-button.bg-blue-600::after {
+  width: 100%;
+}
+
+.category-button:hover {
+  color: #92795d !important;
+  background: transparent !important;
+  transform: translateY(-1px);
+  filter: drop-shadow(0 2px 4px rgba(146, 121, 93, 0.3));
+}
+
+.category-button.bg-blue-600 {
+  color: #92795d !important;
+  background: transparent !important;
+  font-weight: 600;
+}
+
+/* Updated tag button styles for tags page */
+.tag-button,
+#tag-list button {
+  position: relative;
+  transition: all 0.3s ease;
+  background: transparent !important;
+  border: none;
+  box-shadow: none !important;
+  transform: none !important;
+  color: #374151;
+  font-weight: 500;
+}
+
+.tag-button::after,
+#tag-list button::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: -2px;
+  left: 50%;
+  background: linear-gradient(90deg, #92795d, #b8976a);
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transform: translateX(-50%);
+  border-radius: 1px;
+}
+
+.tag-button:hover::after,
+#tag-list button:hover::after {
+  width: 100%;
+}
+
+.tag-button:hover,
+#tag-list button:hover {
+  color: #92795d !important;
+  background: transparent !important;
+  transform: translateY(-1px);
+  filter: drop-shadow(0 2px 4px rgba(146, 121, 93, 0.3));
+}
+
+/* Contact links styles (keeping the same) */
+.contact-link {
+  position: relative;
+  transition: color 0.3s ease;
+}
+
+.contact-link::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: -2px;
+  left: 50%;
+  background: linear-gradient(90deg, #92795d, #b8976a);
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transform: translateX(-50%);
+  border-radius: 1px;
+}
+
+.contact-link:hover::after {
+  width: 100%;
+}
+
+.contact-link:hover {
+  color: #92795d;
+  transform: translateY(-1px);
+  filter: drop-shadow(0 2px 4px rgba(146, 121, 93, 0.3));
+}
