@@ -271,7 +271,7 @@
   border: none;
   box-shadow: none !important;
   transform: none !important;
-  font-size: 1.875rem !important; /* text-3xl equivalent */
+  font-size: 1.5rem !important; /* text-3xl equivalent */
   line-height: 2.25rem !important;
 }
 
