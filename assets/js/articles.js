@@ -1,5 +1,3 @@
-// assets/js/articles.js
-
 // Global variables to store posts and navigation context
 let allPosts = [];
 let navigationContext = {
@@ -8,8 +6,6 @@ let navigationContext = {
   tag: null, // for tag-specific navigation
   posts: null // filtered posts to return to
 };
-
-// Note: Using PHP backend for better performance and server-side processing
 
 // Initialize articles page functionality
 async function initializeArticlesPage(initialCategory = 'All') {
@@ -110,9 +106,6 @@ function renderCategoryButtons(categories, activeCategory = 'All') {
     container.appendChild(btn);
   });
 }
-
-// Render articles in card format
-// Find this function in your assets/js/articles.js file and replace it
 
 // Render articles in card format
 function renderArticles(posts) {
