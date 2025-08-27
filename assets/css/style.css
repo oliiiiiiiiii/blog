@@ -20,15 +20,10 @@
   font-style: normal;
 }
 
-.aside-hover a {
-  transition: color 0.15s ease;
-}
 .aside-hover a:hover,
 .aside-hover a.active {
   color: rgb(101,91,89);
-}
-.aside-hover a.active {
-  transition: none;
+  transition: color 0.3s ease;
 }
 
 #sidebar {
