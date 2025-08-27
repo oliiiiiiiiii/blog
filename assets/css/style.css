@@ -271,6 +271,8 @@
   border: none;
   box-shadow: none !important;
   transform: none !important;
+  font-size: 1.875rem !important; /* text-3xl equivalent */
+  line-height: 2.25rem !important;
 }
 
 .category-button::after {
@@ -280,7 +282,7 @@
   height: 2px;
   bottom: -2px;
   left: 50%;
-  background: linear-gradient(90deg, #92795d, #b8976a);
+  background-color: #92795d;
   transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   transform: translateX(-50%);
   border-radius: 1px;
@@ -315,6 +317,8 @@
   transform: none !important;
   color: #374151;
   font-weight: 500;
+  font-size: 1.875rem !important; /* text-3xl equivalent */
+  line-height: 2.25rem !important;
 }
 
 .tag-button::after,
@@ -325,7 +329,7 @@
   height: 2px;
   bottom: -2px;
   left: 50%;
-  background: linear-gradient(90deg, #92795d, #b8976a);
+  background-color: #92795d;
   transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   transform: translateX(-50%);
   border-radius: 1px;
@@ -357,7 +361,7 @@
   height: 2px;
   bottom: -2px;
   left: 50%;
-  background: linear-gradient(90deg, #92795d, #b8976a);
+  background-color: #92795d;
   transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   transform: translateX(-50%);
   border-radius: 1px;
