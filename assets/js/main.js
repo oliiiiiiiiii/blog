@@ -259,3 +259,65 @@ async function loadTagsPage() {
 window.updateActiveNavigation = updateActiveNavigation;
 
 // Note: Rendering of articles and tags is handled in assets/js/articles.js
+
+// Load home page
+async function loadHomePage() {
+  try {
+    // Load the home HTML template
+    const response = await fetch('partials/home.html');
+    const html = await response.text();
+    
+    const mainContent = document.getElementById('main-content');
+    mainContent.innerHTML = html;
+    
+    // Initialize home page functionality
+    if (window.initializeHomePage) {
+      await window.initializeHomePage();
+    }
+    
+    // Update URL and navigation
+    window.history.pushState({page: 'home'}, '', '#home');
+    updateActiveNavigation('home');
+    
+  } catch (error) {
+    console.error('Error loading home page:', error);
+    const mainContent = document.getElementById('main-content');
+    mainContent.innerHTML = `
+      <div class="text-center p-8">
+        <h2 class="text-2xl font-bold text-red-600 mb-4">Error Loading Home Page</h2>
+        <p class="text-gray-600">Could not load home page. Please try again later.</p>
+      </div>
+    `;
+  }
+}
+
+// Load articles page
+async function loadArticlesPage() {
+  try {
+    // Load the articles HTML template
+    const response = await fetch('partials/articles.html');
+    const html = await response.text();
+    
+    const mainContent = document.getElementById('main-content');
+    mainContent.innerHTML = html;
+    
+    // Initialize articles functionality
+    if (window.initializeArticlesPage) {
+      await window.initializeArticlesPage();
+    }
+    
+    // Update URL and navigation
+    window.history.pushState({page: 'articles'}, '', '#articles');
+    updateActiveNavigation('articles');
+    
+  } catch (error) {
+    console.error('Error loading articles:', error);
+    const mainContent = document.getElementById('main-content');
+    mainContent.innerHTML = `
+      <div class="text-center p-8">
+        <h2 class="text-2xl font-bold text-red-600 mb-4">Error Loading Articles</h2>
+        <p class="text-gray-600">Could not load articles. Please try again later.</p>
+      </div>
+    `;
+  }
+}

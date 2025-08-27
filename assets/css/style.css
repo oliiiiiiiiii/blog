@@ -1,3 +1,27 @@
+/* Line-clamp utilities for text truncation */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Enhance hover effects for home page cards */
+.read-more-arrow {
+  transition: transform 0.2s ease;
+}
+
+article:hover .read-more-arrow {
+  transform: translateX(2px);
+}
+
 .aside-custom {
   background-color: rgba(147, 121, 113, 0.9);
 }
