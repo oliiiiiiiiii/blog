@@ -1,16 +1,13 @@
 .aside-custom {
   background-color: rgba(147, 121, 113, 0.9);
-}
-
-.main-custom-bg {
-  background-color: rgba(147, 121, 113, 0.6);
-}
-
-.aside-custom {
   font-family: "Playfair Display", serif;
   font-optical-sizing: auto;
   font-weight: 400;
   font-style: normal;
+}
+
+.main-custom-bg {
+  background-color: rgba(147, 121, 113, 0.6);
 }
 
 #main-content {
@@ -22,7 +19,7 @@
 
 .aside-hover a:hover,
 .aside-hover a.active {
-  color: rgb(101,91,89);
+  color: rgb(101, 91, 89);
   transition: color 0.3s ease;
 }
 
@@ -65,15 +62,33 @@
   transform: translateX(0);
 }
 
-.menu-item:nth-child(1) { transition-delay: 0.1s; }
-.menu-item:nth-child(2) { transition-delay: 0.2s; }
-.menu-item:nth-child(3) { transition-delay: 0.3s; }
-.menu-item:nth-child(4) { transition-delay: 0.4s; }
-.menu-item:nth-child(5) { transition-delay: 0.5s; }
-.menu-item:nth-child(6) { transition-delay: 0.6s; }
-.menu-item:nth-child(7) { transition-delay: 0.7s; }
-.menu-item:nth-child(8) { transition-delay: 0.8s; }
-.menu-item:nth-child(9) { transition-delay: 0.9s; }
+.menu-item:nth-child(1) {
+  transition-delay: 0.1s;
+}
+.menu-item:nth-child(2) {
+  transition-delay: 0.2s;
+}
+.menu-item:nth-child(3) {
+  transition-delay: 0.3s;
+}
+.menu-item:nth-child(4) {
+  transition-delay: 0.4s;
+}
+.menu-item:nth-child(5) {
+  transition-delay: 0.5s;
+}
+.menu-item:nth-child(6) {
+  transition-delay: 0.6s;
+}
+.menu-item:nth-child(7) {
+  transition-delay: 0.7s;
+}
+.menu-item:nth-child(8) {
+  transition-delay: 0.8s;
+}
+.menu-item:nth-child(9) {
+  transition-delay: 0.9s;
+}
 
 /* Animated divider lines */
 .divider-line {
@@ -92,19 +107,17 @@
   transform: translateX(0);
 }
 
-/* Add this to your existing assets/css/style.css file */
-
 /* Enhanced markdown styling for inline articles */
 .article-content {
   color: #374151;
   line-height: 1.75;
 }
 
-.article-content h1, 
-.article-content h2, 
-.article-content h3, 
-.article-content h4, 
-.article-content h5, 
+.article-content h1,
+.article-content h2,
+.article-content h3,
+.article-content h4,
+.article-content h5,
 .article-content h6 {
   color: #111827;
   font-weight: 700;
@@ -112,16 +125,24 @@
   margin-bottom: 1rem;
 }
 
-.article-content h1 { font-size: 2.25rem; }
-.article-content h2 { font-size: 1.875rem; }
-.article-content h3 { font-size: 1.5rem; }
-.article-content h4 { font-size: 1.25rem; }
+.article-content h1 {
+  font-size: 2.25rem;
+}
+.article-content h2 {
+  font-size: 1.875rem;
+}
+.article-content h3 {
+  font-size: 1.5rem;
+}
+.article-content h4 {
+  font-size: 1.25rem;
+}
 
 .article-content p {
   margin-bottom: 1.5rem;
 }
 
-.article-content ul, 
+.article-content ul,
 .article-content ol {
   margin-bottom: 1.5rem;
   padding-left: 1.5rem;
@@ -173,7 +194,7 @@
   font-size: 0.875rem;
 }
 
-.article-content th, 
+.article-content th,
 .article-content td {
   border: 1px solid #d1d5db;
   padding: 0.75rem;
@@ -204,7 +225,7 @@
 
 .article-content pre code {
   color: #f3f4f6;
-  font-family: 'Fira Code', 'Monaco', 'Consolas', monospace;
+  font-family: "Fira Code", "Monaco", "Consolas", monospace;
   font-size: 0.875rem;
   line-height: 1.5;
 }
@@ -215,7 +236,7 @@
   color: #dc2626;
   padding: 0.125rem 0.375rem;
   border-radius: 0.25rem;
-  font-family: 'Fira Code', 'Monaco', 'Consolas', monospace;
+  font-family: "Fira Code", "Monaco", "Consolas", monospace;
   font-size: 0.875rem;
 }
 
@@ -260,8 +281,6 @@
   }
 }
 
-/* Add this to your assets/css/style.css file */
-
 /* Updated category button styles for articles page */
 .category-button {
   position: relative;
@@ -275,7 +294,7 @@
 }
 
 .category-button::after {
-  content: '';
+  content: "";
   position: absolute;
   width: 0;
   height: 2px;
@@ -306,7 +325,6 @@
 }
 
 /* Updated tag button styles for tags page */
-.tag-button,
 #tag-list button {
   position: relative;
   transition: all 0.3s ease;
@@ -320,9 +338,8 @@
   line-height: 2.25rem !important;
 }
 
-.tag-button::after,
 #tag-list button::after {
-  content: '';
+  content: "";
   position: absolute;
   width: 0;
   height: 2px;
@@ -334,12 +351,10 @@
   border-radius: 1px;
 }
 
-.tag-button:hover::after,
 #tag-list button:hover::after {
   width: 100%;
 }
 
-.tag-button:hover,
 #tag-list button:hover {
   color: #92795d !important;
   background: transparent !important;
@@ -347,14 +362,14 @@
   filter: drop-shadow(0 2px 4px rgba(146, 121, 93, 0.3));
 }
 
-/* Contact links styles (keeping the same) */
+/* Contact link styles */
 .contact-link {
   position: relative;
   transition: color 0.3s ease;
 }
 
 .contact-link::after {
-  content: '';
+  content: "";
   position: absolute;
   width: 0;
   height: 2px;
