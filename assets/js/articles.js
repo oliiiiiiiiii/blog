@@ -234,6 +234,8 @@ function renderArticleInline(postData) {
     backButtonText = `Back to ${navigationContext.tag}`;
   } else if (navigationContext.source === 'articles' && navigationContext.category) {
     backButtonText = `Back to Articles`;
+  } else if (navigationContext.source === 'home') {
+    backButtonText = 'Back to Home';
   }
   
   mainContent.innerHTML = `
@@ -454,6 +456,9 @@ function returnToPreviousPage() {
   } else if (navigationContext.source === 'tags') {
     // Return to tags page
     loadTagsPage();
+  } else if (navigationContext.source === 'home') {
+    // Return to home page
+    loadContent('home');
   } else {
     // Fallback to articles page
     loadArticlesPage();
