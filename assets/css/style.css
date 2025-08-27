@@ -143,9 +143,7 @@
 
 .article-content a {
   color: #3b82f6;
-  text-decoration: underline;
-  text-decoration-thickness: 2px;
-  text-underline-offset: 2px;
+  text-decoration: none;
 }
 
 .article-content a:hover {

@@ -282,7 +282,7 @@ function renderArticleInline(postData) {
           
           ${postData.meta.summary ? `
             <div class="mt-4 p-4 bg-gray-50 rounded-lg border-l-4 border-blue-500">
-              <p class="text-gray-700 italic">${escapeHtml(postData.meta.summary)}</p>
+              <p class="text-gray-700">${escapeHtml(postData.meta.summary)}</p>
             </div>
           ` : ''}
         </header>

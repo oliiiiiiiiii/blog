@@ -286,7 +286,7 @@ $title = $meta['title'] ?? ucfirst(str_replace('-', ' ', $slug));
         
         <?php if (isset($meta['summary'])): ?>
         <div class="mt-4 p-4 bg-gray-50 rounded-lg border-l-4 border-blue-500">
-          <p class="text-gray-700 italic"><?= htmlspecialchars($meta['summary']) ?></p>
+          <p class="text-gray-700"><?= htmlspecialchars($meta['summary']) ?></p>
         </div>
         <?php endif; ?>
       </header>
