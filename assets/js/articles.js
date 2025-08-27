@@ -112,6 +112,9 @@ function renderCategoryButtons(categories, activeCategory = 'All') {
 }
 
 // Render articles in card format
+// Find this function in your assets/js/articles.js file and replace it
+
+// Render articles in card format
 function renderArticles(posts) {
   const container = document.getElementById("articles-container");
   if (!container) return;
@@ -162,7 +165,6 @@ function renderArticles(posts) {
             ${post.date && post.category ? ' • ' : ''}
             ${post.category ? escapeHtml(post.category) : ''}
           </div>
-          <span class="text-sm text-gray-400">5 min read</span>
         </div>
       </div>
     `;
