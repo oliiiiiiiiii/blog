@@ -318,14 +318,19 @@ function renderArticleInline(postData) {
 function addCopyButtons() {
   const codeBlocks = document.querySelectorAll('pre');
   codeBlocks.forEach((block) => {
+    const wrapper = document.createElement('div');
+    wrapper.style.position = 'relative';
+    block.parentNode.insertBefore(wrapper, block);
+    wrapper.appendChild(block);
+
     const button = document.createElement('button');
+    button.className = 'copy-button bg-gray-700 text-white px-2 py-1 text-xs rounded opacity-70 hover:opacity-100 transition-opacity';
     button.className = 'copy-button absolute top-2 right-2 bg-gray-700 text-white px-2 py-1 text-xs rounded opacity-70 hover:opacity-100 transition-opacity';
     button.textContent = 'Copy';
+
+    wrapper.appendChild(button);
+
     button.onclick = () => copyCode(block, button);
-    
-    // Make sure the pre element has relative positioning
-    block.style.position = 'relative';
-    block.appendChild(button);
   });
 }
 
