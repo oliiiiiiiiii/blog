@@ -141,7 +141,7 @@ function renderArticles(posts) {
         </h2>
         
         ${post.summary ? `
-          <p class="summary-style summary-card text-lg leading-relaxed">
+          <p class="summary-card text-lg leading-relaxed">
             ${escapeHtml(post.summary)}
           </p>
         ` : ''}

@@ -164,8 +164,7 @@
 }
 
 .summary-card {
-  border-left: none;
-  background-color: none;
+  color: rgb(60, 46, 46);
 }
 
 .article-content a,
