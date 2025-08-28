@@ -163,6 +163,10 @@
   border-radius: 0.375rem;
 }
 
+.summary-card {
+  border-left: none;
+}
+
 .article-content a,
 .back-button {
   color: rgba(53, 46, 60, 0.5);
