@@ -136,7 +136,7 @@ function renderArticles(posts) {
 
     article.innerHTML = `
       <div class="space-y-4">
-        <h2 class="text-2xl font-bold text-gray-900 leading-tight hover:text-blue-600 transition-colors duration-200">
+        <h2 class="text-2xl font-bold text-gray-900 leading-tight hover:text-[rgb(60,46,46)] transition-colors duration-200">
           ${escapeHtml(post.title || 'Untitled')}
         </h2>
         
