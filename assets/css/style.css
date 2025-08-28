@@ -152,12 +152,12 @@
   margin-bottom: 0.5rem;
 }
 
-.article-content blockquote {
+.article-content blockquote,
+.summary-style {
   border-left: 4px solid rgb(60, 46, 46);
   padding-left: 1rem;
   margin: 1.5rem 0;
-  font-style: italic;
-  color: rgba(60, 46, 46, 0.3s);
+  color: rgba(60, 46, 46, 0.3);
   background-color: rgb(248, 250, 252);
   padding: 1rem;
   border-radius: 0.375rem;
@@ -183,10 +183,6 @@
 .article-content strong {
   font-weight: 700;
   color: #111827;
-}
-
-.article-content em {
-  font-style: italic;
 }
 
 .article-content hr {
@@ -397,4 +393,10 @@
   color: rgb(60, 46, 46);
   transform: translateY(-1px);
   filter: drop-shadow(0 2px 4px rgba(60, 46, 46, 0.3));
+}
+
+/* Article tag styles */
+.article-tag {
+  background-color: rgba(113, 124, 147, 0.3);
+  color: rgba(53, 58, 69, 0.9);
 }

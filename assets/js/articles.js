@@ -129,8 +129,8 @@ function renderArticles(posts) {
 
     // Create tags HTML
     const tagsHtml = post.tags && Array.isArray(post.tags) && post.tags.length > 0
-      ? post.tags.map(tag => 
-          `<span class="inline-block bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">${escapeHtml(tag.trim())}</span>`
+      ? post.tags.map(tag =>
+          `<span class="inline-block article-tag px-3 py-1 rounded-full text-sm font-medium">${escapeHtml(tag.trim())}</span>`
         ).join(" ")
       : '';
 
@@ -214,8 +214,8 @@ function renderArticleInline(postData) {
   
   // Create tags HTML
   const tagsHtml = postData.meta.tags && Array.isArray(postData.meta.tags) && postData.meta.tags.length > 0
-    ? postData.meta.tags.map(tag => 
-        `<span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">${escapeHtml(tag.trim())}</span>`
+    ? postData.meta.tags.map(tag =>
+        `<span class="article-tag px-3 py-1 rounded-full text-sm font-medium">${escapeHtml(tag.trim())}</span>`
       ).join(" ")
     : '';
   

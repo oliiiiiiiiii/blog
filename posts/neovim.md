@@ -45,7 +45,7 @@ set autoindent
 set mouse=a
 set clipboard=unnamedplus
 ```
-這樣就設定完 Neovim 了！||但要這樣設定還不如用本來就有的 vim 就好。||
+這樣就設定完 Neovim 了！ ( 但要這樣設定還不如用本來就有的 vim 就好。 )
 如果你想好好打造 Neovim 可以繼續往下讀。
 ### 設定 Neovim - 進階
 首先，如果剛剛有設定 `init.vim` 的話可以刪掉了。

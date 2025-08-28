@@ -130,7 +130,7 @@ $title = $meta['title'] ?? ucfirst(str_replace('-', ' ', $slug));
         <?php if (isset($meta['tags']) && is_array($meta['tags']) && !empty($meta['tags'])): ?>
         <div class="flex flex-wrap gap-2 mt-4">
           <?php foreach ($meta['tags'] as $tag): ?>
-          <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">
+          <span class="article-tag px-3 py-1 rounded-full text-sm font-medium">
             <?= htmlspecialchars($tag) ?>
           </span>
           <?php endforeach; ?>
