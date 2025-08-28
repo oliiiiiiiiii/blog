@@ -2,7 +2,7 @@
 title: 用 LEMP + WordPress 建立自己的部落格
 date: 2025-08-05
 category: CS
-tags: [LEMP, WordPress, Domain Name, SSL]
+tags: [LEMP, WordPress, Domain Name, SSL, Blog]
 summary: 這篇文章詳細介紹如何使用 LEMP 架構在 Ubuntu 上部署 WordPress，從伺服器設定、資料庫配置、SSL 憑證申請，到網域名稱綁定與後台優化，建立一個完整可運作的部落格網站。
 ---
 ### 前言
