@@ -170,6 +170,7 @@
 
 .article-content a:hover {
   color: rgb(53, 46, 60);
+  font-weight: 700;
 }
 
 .article-content strong {
