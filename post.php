@@ -116,30 +116,29 @@ $title = $meta['title'] ?? ucfirst(str_replace('-', ' ', $slug));
     }
     
     .prose blockquote {
-      border-left: 4px solid #3b82f6;
+      border-left: 4px solid rgb(60, 46, 46);
       padding-left: 1rem;
       margin: 1.5rem 0;
       font-style: italic;
-      color: #6b7280;
-      background-color: #f8fafc;
+      color: rgba(60, 46, 46, 0.3s);
+      background-color: rgb(248, 250, 252);
       padding: 1rem;
       border-radius: 0.375rem;
     }
     
     .prose a {
-      color: #3b82f6;
-      text-decoration: underline;
-      text-decoration-thickness: 2px;
-      text-underline-offset: 2px;
+      color: rgba(53, 46, 60, 0.5);
+      text-decoration: none;
     }
     
     .prose a:hover {
-      color: #1d4ed8;
+      color: rgb(53, 46, 60);
+      font-weight: 700;
     }
     
     .prose strong {
       font-weight: 700;
-      color: #111827;
+      color: rgb(17, 24, 39);
     }
     
     .prose em {
@@ -197,36 +196,11 @@ $title = $meta['title'] ?? ucfirst(str_replace('-', ' ', $slug));
     /* Inline code styling */
     .prose code:not(pre code) {
       background-color: #f3f4f6;
-      color: #dc2626;
+      color: rgb(60, 46, 46);
       padding: 0.125rem 0.375rem;
       border-radius: 0.25rem;
-      font-family: 'Fira Code', 'Monaco', 'Consolas', monospace;
+      font-family: "Fira Code", "Monaco", "Consolas", monospace;
       font-size: 0.875rem;
-    }
-    
-    /* Copy button */
-    .copy-button {
-      position: absolute;
-      top: 0.5rem;
-      right: 0.5rem;
-      background-color: #374151;
-      color: #f9fafb;
-      border: none;
-      border-radius: 0.25rem;
-      padding: 0.25rem 0.5rem;
-      font-size: 0.75rem;
-      cursor: pointer;
-      opacity: 0.7;
-      transition: opacity 0.2s;
-    }
-    
-    .copy-button:hover {
-      opacity: 1;
-      background-color: #4b5563;
-    }
-    
-    .copy-button.copied {
-      background-color: #059669;
     }
   </style>
   
