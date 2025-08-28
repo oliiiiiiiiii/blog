@@ -138,8 +138,8 @@ $title = $meta['title'] ?? ucfirst(str_replace('-', ' ', $slug));
         <?php endif; ?>
         
         <?php if (isset($meta['summary'])): ?>
-        <div class="mt-4 p-4 bg-gray-50 rounded-lg border-l-4 border-blue-500">
-          <p class="text-gray-700"><?= htmlspecialchars($meta['summary']) ?></p>
+        <div class="summary-style">
+          <?= htmlspecialchars($meta['summary']) ?>
         </div>
         <?php endif; ?>
       </header>

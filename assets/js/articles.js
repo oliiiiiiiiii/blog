@@ -141,7 +141,7 @@ function renderArticles(posts) {
         </h2>
         
         ${post.summary ? `
-          <p class="text-gray-600 text-lg leading-relaxed">
+          <p class="summary-style text-lg leading-relaxed">
             ${escapeHtml(post.summary)}
           </p>
         ` : ''}
@@ -274,8 +274,8 @@ function renderArticleInline(postData) {
           ` : ''}
           
           ${postData.meta.summary ? `
-            <div class="mt-4 p-4 bg-gray-50 rounded-lg border-l-4 border-blue-500">
-              <p class="text-gray-700">${escapeHtml(postData.meta.summary)}</p>
+            <div class="summary-style">
+              ${escapeHtml(postData.meta.summary)}
             </div>
           ` : ''}
         </header>
@@ -441,7 +441,10 @@ function showArticlesByTag(tag, posts) {
       <div class="max-w-4xl mx-auto">
         <section class="py-16">
           <div class="mb-8">
-            <button onclick="loadTagsPage()" class="text-blue-600 hover:text-blue-800 transition-colors text-sm font-medium mb-4">
+            <button onclick="loadTagsPage()" class="back-button transition-colors text-sm mb-4 flex items-center">
+              <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+              </svg>
               ← Back to All Tags
             </button>
             <h1 class="text-4xl font-bold text-gray-800">${escapeHtml(tag)}</h1>
