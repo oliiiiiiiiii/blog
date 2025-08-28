@@ -278,7 +278,7 @@ async function initializeHomePage() {
       const article = document.createElement('article');
       article.className = 'bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow cursor-pointer';
       article.innerHTML = `
-        <h3 class="text-xl font-semibold mb-2 text-gray-800">${escapeHtml(post.title || '')}</h3>
+        <h3 class="text-xl font-semibold mb-2 text-gray-800 hover:text-[rgba(60,46,46,0.8)] transition-colors duration-200">${escapeHtml(post.title || '')}</h3>
         ${post.summary ? `<p class="text-gray-600 mb-4">${escapeHtml(post.summary)}</p>` : ''}
         ${post.date ? `<span class="text-sm text-gray-500">${escapeHtml(post.date)}</span>` : ''}
       `;
