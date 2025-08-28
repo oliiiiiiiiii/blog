@@ -167,15 +167,16 @@
   color: rgb(60, 46, 46);
 }
 
-.article-content a,
-.back-button {
+.article-content a {
   color: rgba(53, 46, 60, 0.5);
   text-decoration: none;
+  font-weight: 700;
 }
 
 .back-button {
   color: rgba(53, 46, 60, 0.8);
   text-decoration: none;
+  font-weight: 700;
 }
 
 .article-content a:hover,
