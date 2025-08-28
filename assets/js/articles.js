@@ -237,7 +237,7 @@ function renderArticleInline(postData) {
     <div class="max-w-4xl mx-auto">
       <!-- Navigation -->
       <div class="mb-6">
-        <button onclick="${backButtonAction}" class="text-blue-600 hover:text-blue-800 transition-colors text-sm font-medium mb-4 flex items-center">
+        <button onclick="${backButtonAction}" class="back-button transition-colors text-sm mb-4 flex items-center">
           <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
           </svg>
