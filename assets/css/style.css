@@ -258,7 +258,7 @@
 
 .copy-button:hover {
   opacity: 1;
-  background-color: rgba(147, 121, 113, 0.5);
+  background-color: rgba(60, 46, 46, 0.9);
 }
 
 .copy-button.bg-green-600 {
