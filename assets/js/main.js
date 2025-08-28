@@ -276,11 +276,13 @@ async function initializeHomePage() {
     container.innerHTML = '';
     posts.slice(0, 2).forEach(post => {
       const article = document.createElement('article');
-      article.className = 'bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow cursor-pointer';
+      article.className = 'bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow cursor-pointer flex flex-col h-full';
       article.innerHTML = `
-        <h3 class="text-xl font-semibold mb-2 text-gray-800 hover:text-[rgba(60,46,46,0.8)] transition-colors duration-200">${escapeHtml(post.title || '')}</h3>
-        ${post.summary ? `<p class="summary-card">${escapeHtml(post.summary)}</p>` : ''}
-        ${post.date ? `<span class="text-sm text-gray-500">${escapeHtml(post.date)}</span>` : ''}
+        <div class="flex-grow">
+          <h3 class="text-xl font-semibold mb-2 text-gray-800 hover:text-[rgba(60,46,46,0.8)] transition-colors duration-200">${escapeHtml(post.title || '')}</h3>
+          ${post.summary ? `<p class="summary-card">${escapeHtml(post.summary)}</p>` : ''}
+        </div>
+        ${post.date ? `<span class="text-sm text-gray-500 mt-4">${escapeHtml(post.date)}</span>` : ''}
       `;
 
       article.addEventListener('click', () => {
