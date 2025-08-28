@@ -92,7 +92,17 @@ async function loadContent(page, slug = null) {
 // Function to update active navigation styling
 function updateActiveNavigation(activePage) {
   const navLinks = document.querySelectorAll('nav a');
-  const pageToActivate = activePage === 'article' ? 'articles' : activePage;
+  let pageToActivate = activePage;
+
+  if (activePage === 'article') {
+    if (typeof navigationContext !== 'undefined' && navigationContext.source) {
+      pageToActivate = navigationContext.source === 'tag-filter'
+        ? 'tags'
+        : navigationContext.source;
+    } else {
+      pageToActivate = 'articles';
+    }
+  }
   navLinks.forEach(link => {
     link.classList.remove('active');
     const href = link.getAttribute('href');

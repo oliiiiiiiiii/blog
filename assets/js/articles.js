@@ -445,7 +445,7 @@ function showArticlesByTag(tag, posts) {
               <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
               </svg>
-              ← Back to All Tags
+              Back to All Tags
             </button>
             <h1 class="text-4xl font-bold text-gray-800">${escapeHtml(tag)}</h1>
             <p class="text-gray-600 mt-2">${filteredPosts.length} article${filteredPosts.length !== 1 ? 's' : ''} found</p>
